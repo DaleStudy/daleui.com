@@ -1,5 +1,5 @@
 import { Card, Heading, Text, VStack } from "daleui";
-import { css } from "../../styled-system/css";
+import { css } from "../../../styled-system/css";
 
 const CARDS = [
   {

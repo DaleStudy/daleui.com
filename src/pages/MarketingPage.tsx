@@ -1,14 +1,12 @@
 import { useCallback, useEffect } from "react";
-import { Community } from "./marketing/Community";
-import { Contribution } from "./marketing/Contribution";
-import { Footer } from "./marketing/Footer";
-import { Header } from "./marketing/Header";
-import { How } from "./marketing/How";
-import { Mission } from "./marketing/Mission";
-import { Navigation } from "./marketing/Navigation";
-import { Team } from "./marketing/Team";
+import { Community } from "../sections/marketing/Community";
+import { Contribution } from "../sections/marketing/Contribution";
+import { Header } from "../sections/marketing/Header";
+import { How } from "../sections/marketing/How";
+import { Mission } from "../sections/marketing/Mission";
+import { Team } from "../sections/marketing/Team";
 
-function App() {
+export function MarketingPage() {
   const scrollToSection = useCallback((sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (!element) {
@@ -51,16 +49,12 @@ function App() {
 
   return (
     <>
-      <Navigation />
       <Header handleScrollToSection={setHashNavigation} />
       <Mission />
       <How />
       <Community />
       <Contribution />
       <Team />
-      <Footer />
     </>
   );
 }
-
-export default App;

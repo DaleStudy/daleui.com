@@ -1,6 +1,6 @@
 import { Card, Heading, Tag, VStack } from "daleui";
-import { css } from "../../styled-system/css";
-import { flex, stack } from "../../styled-system/patterns";
+import { css } from "../../../styled-system/css";
+import { flex, stack } from "../../../styled-system/patterns";
 
 const contributionCards = [
   {

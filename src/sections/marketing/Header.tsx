@@ -1,5 +1,5 @@
 import { Button, Heading, VStack } from "daleui";
-import { css } from "../../styled-system/css";
+import { css } from "../../../styled-system/css";
 
 interface HeaderProps {
   handleScrollToSection: (sectionId: string) => void;

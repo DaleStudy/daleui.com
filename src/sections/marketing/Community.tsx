@@ -1,5 +1,5 @@
 import { Card, Heading, Tag, VStack } from "daleui";
-import { css } from "../../styled-system/css";
+import { css } from "../../../styled-system/css";
 
 const communityCards = [
   {
