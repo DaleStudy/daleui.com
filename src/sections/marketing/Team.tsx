@@ -10,7 +10,7 @@ import {
   VStack,
 } from "daleui";
 import { useEffect, useState } from "react";
-import { css } from "../../styled-system/css";
+import { css } from "../../../styled-system/css";
 
 export interface TeamMember {
   /** 팀원 이름 */
