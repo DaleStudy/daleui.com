@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "account_id": "94480614a6df7731f1e4491bdac5c440",
+  "name": "daleui",
+  "compatibility_date": "2026-05-11",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application",
+  },
+  "observability": {
+    "enabled": true,
+  },
+}
