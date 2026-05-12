@@ -42,3 +42,6 @@ coverage
 # Source maps
 *.map
 
+# Cloudflare / Wrangler
+.wrangler
+

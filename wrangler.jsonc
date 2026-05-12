@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "account_id": "94480614a6df7731f1e4491bdac5c440",
+  "name": "daleui",
+  "compatibility_date": "2026-05-11",
+  "preview_urls": true,
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application",
+  },
+  "routes": [
+    { "pattern": "daleui.com", "custom_domain": true },
+    { "pattern": "www.daleui.com", "custom_domain": true },
+  ],
+  "observability": {
+    "enabled": true,
+  },
+}
