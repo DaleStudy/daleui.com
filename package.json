@@ -27,7 +27,7 @@
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.36.3",
     "@codecov/vite-plugin": "^1.9.1",
-    "@eslint/js": "^9.39.4",
+    "@eslint/js": "^10.0.1",
     "@pandacss/dev": "^1.11.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
