@@ -1,5 +1,6 @@
 import { defineConfig } from "@pandacss/dev";
 import { globalCss } from "./src/styles/globalCss";
+import { proseCss } from "./src/styles/proseCss";
 import { borderWidths, borders } from "./src/tokens/borders";
 import { colors, semanticColors } from "./src/tokens/colors";
 import { radii } from "./src/tokens/radii";
@@ -23,7 +24,7 @@ export default defineConfig({
   // Files to exclude
   exclude: [],
 
-  globalCss,
+  globalCss: { ...globalCss, ...proseCss },
 
   globalVars: {
     "--font-pretendard": "Pretendard Variable",
