@@ -1,4 +1,4 @@
-import { findBlog } from "./content/loaders/blog";
+import { findBlog } from "./content/blog/loader";
 import { SiteLayout } from "./layouts/SiteLayout";
 import { BlogPage } from "./pages/BlogPage";
 import { MarketingPage } from "./pages/MarketingPage";

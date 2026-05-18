@@ -1,4 +1,4 @@
-import type { MdxDoc, MdxModule } from "../types";
+import type { MdxDoc, MdxModule } from "./types";
 
 const EXT = ".mdx";
 

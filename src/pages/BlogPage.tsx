@@ -1,8 +1,8 @@
 import { Box, Flex, Heading, Text, VStack } from "daleui";
 import { useEffect, useRef } from "react";
 import { css } from "../../styled-system/css";
-import type { BlogFrontmatter } from "../content/schemas/blog";
-import type { MdxDoc } from "../content/types";
+import type { BlogFrontmatter } from "../content/blog/schema";
+import type { MdxDoc } from "../mdx/types";
 
 type BlogPageProps = {
   post: MdxDoc<BlogFrontmatter>;
