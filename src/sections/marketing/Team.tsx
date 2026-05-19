@@ -258,10 +258,7 @@ const Members: TeamMember[] = [
 ];
 
 export function Team({ members = Members }: TeamProps) {
-  const [isDark, setIsDark] = useState(() => {
-    const el = document.documentElement;
-    return el.classList.contains("dark");
-  });
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     const el = document.documentElement;
@@ -270,6 +267,8 @@ export function Team({ members = Members }: TeamProps) {
       const hasDarkClass = el.classList.contains("dark");
       setIsDark(hasDarkClass);
     };
+
+    updateThemeState();
 
     const observer = new MutationObserver(updateThemeState);
     observer.observe(el, {

@@ -19,10 +19,7 @@ const LINK_ITEMS = [
 
 export function Navigation() {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const [isDark, setIsDark] = useState(() => {
-    const el = document.documentElement;
-    return el.classList.contains("dark");
-  });
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     const el = document.documentElement;
@@ -31,6 +28,8 @@ export function Navigation() {
       const hasDarkClass = el.classList.contains("dark");
       setIsDark(hasDarkClass);
     };
+
+    updateThemeState();
 
     const observer = new MutationObserver(updateThemeState);
     observer.observe(el, {

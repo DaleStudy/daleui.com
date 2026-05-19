@@ -1,7 +1,7 @@
 import { cloudflare } from "@cloudflare/vite-plugin";
 import { codecovVitePlugin } from "@codecov/vite-plugin";
 import mdx from "@mdx-js/rollup";
-import react from "@vitejs/plugin-react";
+import { reactRouter } from "@react-router/dev/vite";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeExpressiveCode from "rehype-expressive-code";
 import rehypeExternalLinks from "rehype-external-links";
@@ -43,7 +43,7 @@ export default defineConfig({
         ],
       }),
     },
-    react(),
+    reactRouter(),
     svgr(),
     cloudflare(),
     codecovVitePlugin({

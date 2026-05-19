@@ -13,6 +13,8 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
+    "types": ["vite/client"],
+    "rootDirs": [".", "./.react-router/types"],
 
     /* Linting */
     "strict": true,
@@ -21,5 +23,5 @@
     "noFallthroughCasesInSwitch": true,
     "verbatimModuleSyntax": true
   },
-  "include": ["src", "styled-system"]
+  "include": ["src", "styled-system", ".react-router/types/**/*"]
 }
