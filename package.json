@@ -44,7 +44,7 @@
     "happy-dom": "^20.9.0",
     "prettier": "^3.8.3",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.59.2",
+    "typescript-eslint": "^8.59.3",
     "vite": "^7.3.3",
     "vite-plugin-svgr": "^4.5.0",
     "vitest": "^4.1.6",
