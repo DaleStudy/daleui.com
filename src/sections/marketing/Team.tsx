@@ -9,8 +9,8 @@ import {
   Text,
   VStack,
 } from "daleui";
-import { useEffect, useState } from "react";
 import { css } from "../../../styled-system/css";
+import { useTheme } from "../../hooks/useTheme";
 
 export interface TeamMember {
   /** 팀원 이름 */
@@ -258,25 +258,7 @@ const Members: TeamMember[] = [
 ];
 
 export function Team({ members = Members }: TeamProps) {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const el = document.documentElement;
-
-    const updateThemeState = () => {
-      const hasDarkClass = el.classList.contains("dark");
-      setIsDark(hasDarkClass);
-    };
-
-    updateThemeState();
-
-    const observer = new MutationObserver(updateThemeState);
-    observer.observe(el, {
-      attributes: true,
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  const { isDark } = useTheme();
 
   return (
     <section

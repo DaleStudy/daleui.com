@@ -8,14 +8,14 @@
   "homepage": "https://www.daleui.com",
   "scripts": {
     "dev": "react-router dev",
-    "build": "react-router typegen && tsc -b && react-router build",
+    "build": "tsc -b && react-router build",
     "format": "prettier --check .",
     "lint": "eslint .",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "preview": "vite preview",
     "deploy": "bun run build && wrangler deploy",
-    "prepare": "panda codegen"
+    "prepare": "panda codegen && react-router typegen"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.2.8",

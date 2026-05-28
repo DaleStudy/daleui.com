@@ -1,7 +1,8 @@
 import { Button, Icon, Link } from "daleui";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { css } from "../../styled-system/css";
 import { stack } from "../../styled-system/patterns";
+import { useTheme } from "../hooks/useTheme";
 
 const LINK_ITEMS = [
   { id: 1, label: "깃허브", href: "https://github.com/DaleStudy/daleui" },
@@ -19,30 +20,7 @@ const LINK_ITEMS = [
 
 export function Navigation() {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const el = document.documentElement;
-
-    const updateThemeState = () => {
-      const hasDarkClass = el.classList.contains("dark");
-      setIsDark(hasDarkClass);
-    };
-
-    updateThemeState();
-
-    const observer = new MutationObserver(updateThemeState);
-    observer.observe(el, {
-      attributes: true,
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  const handleToggleTheme = () => {
-    const el = document.documentElement;
-    el.classList.toggle("dark");
-  };
+  const { isDark, toggleTheme } = useTheme();
 
   const handleToggleMenu = () => {
     setIsOpenMenu((v) => !v);
@@ -227,7 +205,7 @@ export function Navigation() {
               name={isDark ? "moon" : "sun"}
               size="lg"
               tone="brand"
-              onClick={handleToggleTheme}
+              onClick={toggleTheme}
             />
           </li>
           <li

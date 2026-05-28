@@ -11,6 +11,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="UTF-8" />
         <link rel="icon" type="image/svg+xml" href="/logo.svg" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        {/* FOUC를 방지 */}
+        <script>
+          {`
+            (function () {
+              try {
+                var stored = localStorage.getItem('theme');
+                var prefersDark = !stored && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (stored === 'dark' || prefersDark) {
+                  document.documentElement.classList.add('dark');
+                }
+              } catch (e) {}
+            })();
+          `}
+        </script>
         <Meta />
         <Links />
       </head>
