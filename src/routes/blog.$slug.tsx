@@ -1,15 +1,23 @@
 import { Box, Flex, Heading, Text, VStack } from "daleui";
 import { useEffect, useRef } from "react";
+import type { Route } from "./+types/blog.$slug";
 import { css } from "../../styled-system/css";
-import type { BlogFrontmatter } from "../content/blog/schema";
-import type { MdxDoc } from "../mdx/types";
+import { findBlog } from "../content/blog/loader";
 
-type BlogPageProps = {
-  post: MdxDoc<BlogFrontmatter>;
-};
+// eslint-disable-next-line react-refresh/only-export-components
+export async function loader({ params }: Route.LoaderArgs) {
+  const post = findBlog(params.slug);
+  if (!post) throw new Response("Not Found", { status: 404 });
+  return { frontmatter: post.frontmatter, slug: post.slug };
+}
 
-export function BlogPage({ post }: BlogPageProps) {
-  const { default: Component, frontmatter } = post;
+export default function BlogSlug({ loaderData }: Route.ComponentProps) {
+  const { frontmatter, slug } = loaderData;
+  /**
+   * @todo loader에서는 컴포넌트를 직렬화할 수 없어서 불가피하게 findBlog 함수를 다시 호출합니다.
+   */
+  const post = findBlog(slug);
+  const Component = post!.default;
   const articleRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -20,10 +28,12 @@ export function BlogPage({ post }: BlogPageProps) {
       mermaid.initialize({ startOnLoad: false });
       void mermaid.run({ nodes: Array.from(nodes) as HTMLElement[] });
     });
-  }, [Component]);
+  }, [slug]);
 
   return (
     <VStack as="main">
+      <meta property="og:title" content={`${frontmatter.title} | Dale UI`} />
+      <meta name="description" content={frontmatter.description ?? ""} />
       <Box
         as="article"
         ref={articleRef}

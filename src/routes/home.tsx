@@ -6,7 +6,12 @@ import { How } from "../sections/marketing/How";
 import { Mission } from "../sections/marketing/Mission";
 import { Team } from "../sections/marketing/Team";
 
-export function MarketingPage() {
+// eslint-disable-next-line react-refresh/only-export-components
+export function meta() {
+  return [{ title: "Dale UI" }];
+}
+
+export default function Home() {
   const scrollToSection = useCallback((sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (!element) {
