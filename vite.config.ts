@@ -19,6 +19,7 @@ export default defineConfig({
     {
       enforce: "pre",
       ...mdx({
+        format: "detect",
         providerImportSource: "@mdx-js/react",
         remarkPlugins: [
           remarkFrontmatter,
