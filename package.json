@@ -7,10 +7,10 @@
   "license": "MIT",
   "homepage": "https://www.daleui.com",
   "scripts": {
-    "sync-blog": "node scripts/sync-blog.mts",
-    "predev": "node scripts/sync-blog.mts",
+    "sync-blog": "bun scripts/sync-blog.mts",
+    "predev": "bun scripts/sync-blog.mts",
     "dev": "react-router dev",
-    "prebuild": "node scripts/sync-blog.mts",
+    "prebuild": "bun scripts/sync-blog.mts",
     "build": "tsc -b && react-router build",
     "format": "prettier --check .",
     "lint": "eslint .",

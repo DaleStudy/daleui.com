@@ -16,7 +16,6 @@ const OUT_DIR = join(import.meta.dirname, "..", "src", "content", "blog");
 /**
  * 생성 파일명은 `<discussion 번호>.md`이며 slug = 번호 (예: /blog/987).
  * GFM 본문은 .md(순수 markdown)로 저장해 MDX 파싱 충돌을 피합니다.
- * 정리 시 숫자.md 파일만 지워 손으로 쓴 mdx(getting-started.mdx 등)는 보존합니다.
  */
 const GENERATED_NAME = /^\d+\.md$/;
 
