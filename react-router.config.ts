@@ -4,8 +4,8 @@ import type { Config } from "@react-router/dev/config";
 
 const blogDir = join(import.meta.dirname, "src/content/blog");
 const blogSlugs = readdirSync(blogDir)
-  .filter((name) => name.endsWith(".mdx"))
-  .map((name) => name.replace(/\.mdx$/, ""));
+  .filter((name) => /\.mdx?$/.test(name))
+  .map((name) => name.replace(/\.mdx?$/, ""));
 
 export default {
   appDirectory: "src",
