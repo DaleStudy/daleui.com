@@ -29,7 +29,7 @@ interface Discussion {
 }
 
 async function fetchDiscussions(): Promise<Discussion[]> {
-  const token = process.env.GITHUB_TOKEN;
+  const token = import.meta.env.GITHUB_TOKEN;
   const headers: Record<string, string> = {
     Accept: "application/vnd.github+json",
     "X-GitHub-Api-Version": "2022-11-28",
