@@ -36,18 +36,23 @@ export const proseCss = defineGlobalStyles({
     display: "none",
   },
   ".prose h1": {
+    marginTop: "24",
     textStyle: "heading.1",
   },
   ".prose h2": {
+    marginTop: "24",
     textStyle: "heading.2",
   },
   ".prose h3": {
+    marginTop: "16",
     textStyle: "heading.3",
   },
   ".prose h4": {
+    marginTop: "16",
     textStyle: "heading.4",
   },
   ".prose h5": {
+    marginTop: "8",
     textStyle: "heading.5",
   },
   ".prose p": {
