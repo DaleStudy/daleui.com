@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import type { Route } from "./+types/blog._index";
 import { css } from "../../styled-system/css";
 import { listBlog } from "../content/blog/loader";
+import { UserProfile } from "../components/UserProfile";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function meta() {
@@ -69,6 +70,7 @@ export default function BlogIndex({ loaderData }: Route.ComponentProps) {
                           color: "fg.neutral",
                           textDecoration: "none",
                           _hover: { color: "fg.brand" },
+                          fontSize: "2xl",
                         })}
                       >
                         {post.frontmatter.title}
@@ -79,20 +81,25 @@ export default function BlogIndex({ loaderData }: Route.ComponentProps) {
                         {post.frontmatter.description}
                       </Card.Description>
                     ) : null}
+
+                    <Flex
+                      justify="between"
+                      align="end"
+                      className={css({ mt: "12" })}
+                    >
+                      <UserProfile
+                        authorGithubUrl={post.frontmatter.authorGithubUrl ?? ""}
+                        author={post.frontmatter.author}
+                        authorAvatar={post.frontmatter.authorAvatar ?? ""}
+                      />
+
+                      <Text size="sm" tone="neutral">
+                        <time dateTime={post.frontmatter.date}>
+                          {post.frontmatter.date}
+                        </time>
+                      </Text>
+                    </Flex>
                   </Card.Body>
-                  <Flex gap="8" align="center" className={css({ mt: "12" })}>
-                    <Text size="sm" tone="neutral">
-                      <time dateTime={post.frontmatter.date}>
-                        {post.frontmatter.date}
-                      </time>
-                    </Text>
-                    <Text size="sm" tone="neutral">
-                      ·
-                    </Text>
-                    <Text size="sm" tone="neutral">
-                      {post.frontmatter.author}
-                    </Text>
-                  </Flex>
                 </Card>
               </li>
             ))}
