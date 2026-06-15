@@ -105,12 +105,20 @@ export default function BlogSlug({ loaderData }: Route.ComponentProps) {
             })}
           >
             {older ? (
-              <PostNavigation to={`/blog/${older.slug}`} label={older.title} />
+              <PostNavigation
+                to={`/blog/${older.slug}`}
+                label={older.title}
+                direction="left"
+              />
             ) : (
               <Box className={css({ flex: 1 })} />
             )}
             {newer ? (
-              <PostNavigation to={`/blog/${newer.slug}`} label={newer.title} />
+              <PostNavigation
+                to={`/blog/${newer.slug}`}
+                label={newer.title}
+                direction="right"
+              />
             ) : (
               <Box className={css({ flex: 1 })} />
             )}
