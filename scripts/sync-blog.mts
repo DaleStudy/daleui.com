@@ -66,21 +66,29 @@ function quote(value: string): string {
   return JSON.stringify(value);
 }
 
-/** 본문 첫 문단에서 description을 추출합니다 (마크다운 기호 제거, 160자 제한). */
-function deriveDescription(body: string): string {
-  const firstParagraph = body
-    .split(/\n\s*\n/)
-    .map((block) => block.trim())
-    .find(
-      (block) => block && !block.startsWith("#") && !block.startsWith("```"),
-    );
-  if (!firstParagraph) return "";
-  const plain = firstParagraph
+/** 블록에서 마크다운/HTML 이미지와 인용·서식 기호를 제거해 평문 텍스트만 남깁니다. */
+function toPlainText(block: string): string {
+  return block
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "") // 이미지 → 제거
+    .replace(/<img[^>]*>/gi, "") // HTML 이미지 → 제거
     .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1") // 링크 → 텍스트
     .replace(/[*_`#>]/g, "")
     .replace(/\s+/g, " ")
     .trim();
-  return plain.length > 160 ? `${plain.slice(0, 159)}…` : plain;
+}
+
+/** 본문 첫 문단에서 description을 추출합니다 (이미지·마크다운 기호 제거, 160자 제한). */
+function deriveDescription(body: string): string {
+  const firstParagraph = body
+    .split(/\n\s*\n/)
+    .map((block) => block.trim())
+    .filter((block) => !block.startsWith("#") && !block.startsWith("```")) // 제목·코드블록 제외
+    .map(toPlainText)
+    .find((text) => text.length > 0); // 이미지만 있던 블록은 빈 문자열이 되어 건너뜀
+  if (!firstParagraph) return "";
+  return firstParagraph.length > 160
+    ? `${firstParagraph.slice(0, 159)}…`
+    : firstParagraph;
 }
 
 function toMarkdown(d: Discussion): string {
