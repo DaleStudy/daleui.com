@@ -24,7 +24,7 @@ interface Discussion {
   title: string;
   body: string;
   created_at: string;
-  user: { login: string } | null;
+  user: { login: string; avatar_url: string; html_url: string } | null;
   category: { name: string } | null;
 }
 
@@ -86,6 +86,8 @@ function deriveDescription(body: string): string {
 function toMarkdown(d: Discussion): string {
   const date = d.created_at.slice(0, 10); // YYYY-MM-DD
   const author = d.user?.login ?? "DaleStudy";
+  const authorAvatar = d.user?.avatar_url ?? null;
+  const authorGithubUrl = d.user?.html_url ?? `https://github.com/${author}`;
   const description = deriveDescription(d.body);
 
   const frontmatter = [
@@ -94,6 +96,8 @@ function toMarkdown(d: Discussion): string {
     description ? `description: ${quote(description)}` : null,
     `date: ${date}`,
     `author: ${quote(author)}`,
+    authorAvatar ? `authorAvatar: ${quote(authorAvatar)}` : null,
+    `authorGithubUrl: ${quote(authorGithubUrl)}`,
     "---",
   ]
     .filter(Boolean)

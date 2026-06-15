@@ -12,10 +12,9 @@ export const proseCss = defineGlobalStyles({
     marginTop: "16",
   },
   ".prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6": {
-    marginTop: "32",
-    marginBottom: "8",
-    fontWeight: "var(--font-weights-bold)",
-    scrollMarginTop: "80px",
+    paddingBottom: "8",
+    borderBottom: "1px solid",
+    borderColor: "border.neutral",
   },
   ".prose :is(h1, h2, h3, h4, h5, h6) > a[aria-hidden='true']": {
     marginLeft: "8",
@@ -36,15 +35,21 @@ export const proseCss = defineGlobalStyles({
   ".prose :is(h1, h2, h3, h4, h5, h6) > a[aria-hidden='true'] .icon-link": {
     display: "none",
   },
-  ".prose h1": { fontSize: "var(--font-sizes-4xl)" },
-  ".prose h2": {
-    fontSize: "var(--font-sizes-3xl)",
-    paddingBottom: "8",
-    borderBottom: "1px solid",
-    borderColor: "border.neutral",
+  ".prose h1": {
+    textStyle: "heading.1",
   },
-  ".prose h3": { fontSize: "var(--font-sizes-2xl)" },
-  ".prose h4": { fontSize: "var(--font-sizes-xl)" },
+  ".prose h2": {
+    textStyle: "heading.2",
+  },
+  ".prose h3": {
+    textStyle: "heading.3",
+  },
+  ".prose h4": {
+    textStyle: "heading.4",
+  },
+  ".prose h5": {
+    textStyle: "heading.5",
+  },
   ".prose p": {
     lineHeight: "var(--line-heights-relaxed)",
   },
