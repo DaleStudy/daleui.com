@@ -5,7 +5,7 @@ import type { Route } from "./+types/blog.$slug";
 import { css } from "../../styled-system/css";
 import { findBlog, listBlog } from "../content/blog/loader";
 import { UserProfile } from "../components/UserProfile";
-import PostNavigation from "../components/PostNaviage";
+import DirectionalLink from "../components/DirectionalLink";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export async function loader({ params }: Route.LoaderArgs) {
@@ -105,8 +105,9 @@ export default function BlogSlug({ loaderData }: Route.ComponentProps) {
             })}
           >
             {older ? (
-              <PostNavigation
+              <DirectionalLink
                 to={`/blog/${older.slug}`}
+                caption="이전"
                 label={older.title}
                 direction="left"
               />
@@ -114,8 +115,9 @@ export default function BlogSlug({ loaderData }: Route.ComponentProps) {
               <Box className={css({ flex: 1 })} />
             )}
             {newer ? (
-              <PostNavigation
+              <DirectionalLink
                 to={`/blog/${newer.slug}`}
+                caption="다음"
                 label={newer.title}
                 direction="right"
               />
