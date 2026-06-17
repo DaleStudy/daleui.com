@@ -61,46 +61,55 @@ export default function BlogIndex({ loaderData }: Route.ComponentProps) {
           >
             {posts.map((post) => (
               <li key={post.slug}>
-                <Card outline>
-                  <Card.Body>
-                    <Card.Title>
-                      <Link
-                        to={`/blog/${post.slug}`}
-                        className={css({
-                          color: "fg.neutral",
-                          textDecoration: "none",
-                          _hover: { color: "fg.brand" },
-                          fontSize: "2xl",
-                        })}
+                <Link to={`/blog/${post.slug}`} className="group">
+                  <Card
+                    outline
+                    className={css({
+                      _groupHover: {
+                        borderColor: "border.brand",
+                      },
+                    })}
+                  >
+                    <Card.Body>
+                      <Card.Title>
+                        <span
+                          className={css({
+                            _groupHover: {
+                              color: "fg.brand",
+                            },
+                          })}
+                        >
+                          {post.frontmatter.title}
+                        </span>
+                      </Card.Title>
+                      {post.frontmatter.description ? (
+                        <Card.Description>
+                          {post.frontmatter.description}
+                        </Card.Description>
+                      ) : null}
+
+                      <Flex
+                        justify="between"
+                        align="end"
+                        className={css({ mt: "12" })}
                       >
-                        {post.frontmatter.title}
-                      </Link>
-                    </Card.Title>
-                    {post.frontmatter.description ? (
-                      <Card.Description>
-                        {post.frontmatter.description}
-                      </Card.Description>
-                    ) : null}
+                        <UserProfile
+                          authorGithubUrl={
+                            post.frontmatter.authorGithubUrl ?? ""
+                          }
+                          author={post.frontmatter.author}
+                          authorAvatar={post.frontmatter.authorAvatar ?? ""}
+                        />
 
-                    <Flex
-                      justify="between"
-                      align="end"
-                      className={css({ mt: "12" })}
-                    >
-                      <UserProfile
-                        authorGithubUrl={post.frontmatter.authorGithubUrl ?? ""}
-                        author={post.frontmatter.author}
-                        authorAvatar={post.frontmatter.authorAvatar ?? ""}
-                      />
-
-                      <Text size="sm" tone="neutral">
-                        <time dateTime={post.frontmatter.date}>
-                          {post.frontmatter.date}
-                        </time>
-                      </Text>
-                    </Flex>
-                  </Card.Body>
-                </Card>
+                        <Text size="sm" tone="neutral">
+                          <time dateTime={post.frontmatter.date}>
+                            {post.frontmatter.date}
+                          </time>
+                        </Text>
+                      </Flex>
+                    </Card.Body>
+                  </Card>
+                </Link>
               </li>
             ))}
           </ul>
