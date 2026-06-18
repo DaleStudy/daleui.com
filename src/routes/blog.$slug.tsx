@@ -6,6 +6,7 @@ import { css } from "../../styled-system/css";
 import { findBlog, listBlog } from "../content/blog/loader";
 import { UserProfile } from "../components/UserProfile";
 import DirectionalLink from "../components/DirectionalLink";
+import { Navigation } from "../sections/blog/Navigation";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export async function loader({ params }: Route.LoaderArgs) {
@@ -48,85 +49,88 @@ export default function BlogSlug({ loaderData }: Route.ComponentProps) {
   }, [slug]);
 
   return (
-    <VStack as="main" className={css({ flex: 1 })}>
-      <meta property="og:title" content={`${frontmatter.title} | Dale UI`} />
-      <meta name="description" content={frontmatter.description ?? ""} />
-      <Box
-        as="article"
-        ref={articleRef}
-        width="100%"
-        className={`prose ${css({
-          maxWidth: "768px",
-          px: { base: "16", md: "24" },
-          py: { base: "40", md: "48" },
-        })}`}
-      >
-        <Box as="header" className={css({ mb: "24" })}>
-          <Button
-            variant="ghost"
-            tone="neutral"
-            size="sm"
-            onClick={() => navigate("/blog")}
-          >
-            <Icon name="chevronLeft" size="sm" />
-            목록으로
-          </Button>
-          <Heading level={1}>{frontmatter.title}</Heading>
-          <Flex justify="between" align="end" className={css({ mt: "16" })}>
-            <UserProfile
-              authorGithubUrl={frontmatter.authorGithubUrl ?? ""}
-              author={frontmatter.author}
-              authorAvatar={frontmatter.authorAvatar ?? ""}
-            />
-            <Text size="sm" tone="neutral">
-              <time dateTime={frontmatter.date}>{frontmatter.date}</time>
-            </Text>
-          </Flex>
-        </Box>
-        <Component />
-
+    <>
+      <Navigation />
+      <VStack as="main" className={css({ flex: 1 })}>
+        <meta property="og:title" content={`${frontmatter.title} | Dale UI`} />
+        <meta name="description" content={frontmatter.description ?? ""} />
         <Box
-          as="nav"
-          aria-label="글 이동"
-          className={css({
-            mt: "48",
-            pt: "24",
-            borderTopWidth: "1px",
-            borderTopStyle: "solid",
-            borderColor: "border.neutral",
-          })}
+          as="article"
+          ref={articleRef}
+          width="100%"
+          className={`prose ${css({
+            maxWidth: "768px",
+            px: { base: "16", md: "24" },
+            py: { base: "40", md: "48" },
+          })}`}
         >
-          <div
+          <Box as="header" className={css({ mb: "24" })}>
+            <Button
+              variant="ghost"
+              tone="neutral"
+              size="sm"
+              onClick={() => navigate("/blog")}
+            >
+              <Icon name="chevronLeft" size="sm" />
+              목록으로
+            </Button>
+            <Heading level={1}>{frontmatter.title}</Heading>
+            <Flex justify="between" align="end" className={css({ mt: "16" })}>
+              <UserProfile
+                authorGithubUrl={frontmatter.authorGithubUrl ?? ""}
+                author={frontmatter.author}
+                authorAvatar={frontmatter.authorAvatar ?? ""}
+              />
+              <Text size="sm" tone="neutral">
+                <time dateTime={frontmatter.date}>{frontmatter.date}</time>
+              </Text>
+            </Flex>
+          </Box>
+          <Component />
+
+          <Box
+            as="nav"
+            aria-label="글 이동"
             className={css({
-              display: "flex",
-              gap: "16",
-              flexDirection: { base: "column", sm: "row" },
-              alignItems: "stretch",
+              mt: "48",
+              pt: "24",
+              borderTopWidth: "1px",
+              borderTopStyle: "solid",
+              borderColor: "border.neutral",
             })}
           >
-            {older ? (
-              <DirectionalLink
-                to={`/blog/${older.slug}`}
-                caption="이전"
-                label={older.title}
-                direction="left"
-              />
-            ) : (
-              <Box className={css({ flex: 1 })} />
-            )}
-            {newer ? (
-              <DirectionalLink
-                to={`/blog/${newer.slug}`}
-                caption="다음"
-                label={newer.title}
-                direction="right"
-              />
-            ) : (
-              <Box className={css({ flex: 1 })} />
-            )}
-          </div>
+            <div
+              className={css({
+                display: "flex",
+                gap: "16",
+                flexDirection: { base: "column", sm: "row" },
+                alignItems: "stretch",
+              })}
+            >
+              {older ? (
+                <DirectionalLink
+                  to={`/blog/${older.slug}`}
+                  caption="이전"
+                  label={older.title}
+                  direction="left"
+                />
+              ) : (
+                <Box className={css({ flex: 1 })} />
+              )}
+              {newer ? (
+                <DirectionalLink
+                  to={`/blog/${newer.slug}`}
+                  caption="다음"
+                  label={newer.title}
+                  direction="right"
+                />
+              ) : (
+                <Box className={css({ flex: 1 })} />
+              )}
+            </div>
+          </Box>
         </Box>
-      </Box>
-    </VStack>
+      </VStack>
+    </>
   );
 }

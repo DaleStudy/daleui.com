@@ -30,7 +30,7 @@ export default function Home() {
       window.history.pushState(null, "", `#${sectionId}`);
       scrollToSection(sectionId);
     },
-    [scrollToSection]
+    [scrollToSection],
   );
 
   useEffect(() => {
