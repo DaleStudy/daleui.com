@@ -29,7 +29,28 @@ export default function BlogIndex({ loaderData }: Route.ComponentProps) {
   const { posts } = loaderData;
 
   return (
-    <Box as="main" className={css({ flex: 1, backgroundColor: "bg.brand" })}>
+    <Box
+      as="main"
+      className={css({
+        flex: 1,
+      })}
+    >
+      <VStack
+        as="header"
+        className={css({ py: "64", bgColor: "bg.brand", gap: "16" })}
+      >
+        <Heading level={1}>Dale UI 블로그</Heading>
+        <p
+          className={css({
+            textStyle: "body.lg",
+            fontWeight: "semibold",
+            color: "fg.neutral.disabled",
+          })}
+        >
+          달레UI 팀이 디자인 시스템을 만들며 쌓은 기록을 공유합니다.
+        </p>
+      </VStack>
+
       <VStack
         align="stretch"
         gap="32"
@@ -41,13 +62,6 @@ export default function BlogIndex({ loaderData }: Route.ComponentProps) {
           py: { base: "40", md: "48" },
         })}
       >
-        <Box as="header">
-          <Heading level={1}>블로그</Heading>
-          <Text tone="neutral">
-            달레UI 팀이 디자인 시스템을 만들며 쌓은 기록을 공유합니다.
-          </Text>
-        </Box>
-
         {posts.length === 0 ? (
           <Text tone="neutral">아직 게시된 글이 없습니다.</Text>
         ) : (

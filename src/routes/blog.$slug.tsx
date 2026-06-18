@@ -48,7 +48,7 @@ export default function BlogSlug({ loaderData }: Route.ComponentProps) {
   }, [slug]);
 
   return (
-    <VStack as="main" className={css({ flex: 1, backgroundColor: "bg.brand" })}>
+    <VStack as="main" className={css({ flex: 1 })}>
       <meta property="og:title" content={`${frontmatter.title} | Dale UI`} />
       <meta name="description" content={frontmatter.description ?? ""} />
       <Box
