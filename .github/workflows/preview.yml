@@ -47,7 +47,7 @@ jobs:
 
       - name: Upload preview version to Cloudflare Workers
         id: deploy
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: "94480614a6df7731f1e4491bdac5c440"
