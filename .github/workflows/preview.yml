@@ -40,7 +40,7 @@ jobs:
           NOW: ${{ steps.commit.outputs.now }}
         run: envsubst < .github/preview-comment.md > comment.md
       - name: Comment build in progress
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           header: cloudflare-workers
           path: comment.md
@@ -65,7 +65,7 @@ jobs:
           NOW: ${{ steps.commit.outputs.now }}
         run: envsubst < .github/preview-comment.md > comment.md
       - name: Comment preview URL on PR
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           header: cloudflare-workers
           path: comment.md
