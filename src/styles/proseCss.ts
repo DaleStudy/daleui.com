@@ -15,6 +15,7 @@ export const proseCss = defineGlobalStyles({
     paddingBottom: "8",
     borderBottom: "1px solid",
     borderColor: "border.neutral",
+    textWrap: "wrap",
   },
   ".prose :is(h1, h2, h3, h4, h5, h6) > a[aria-hidden='true']": {
     marginLeft: "8",
