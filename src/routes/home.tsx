@@ -5,6 +5,8 @@ import { Header } from "../sections/marketing/Header";
 import { How } from "../sections/marketing/How";
 import { Mission } from "../sections/marketing/Mission";
 import { Team } from "../sections/marketing/Team";
+import { Navigation } from "../sections/marketing/Navigation";
+import { Footer } from "../sections/marketing/Footer";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function meta() {
@@ -54,12 +56,14 @@ export default function Home() {
 
   return (
     <>
+      <Navigation />
       <Header handleScrollToSection={setHashNavigation} />
       <Mission />
       <How />
       <Community />
       <Contribution />
       <Team />
+      <Footer />
     </>
   );
 }

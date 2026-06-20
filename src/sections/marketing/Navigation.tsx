@@ -1,8 +1,8 @@
 import { Button, Icon, Link } from "daleui";
 import { useState } from "react";
-import { css } from "../../styled-system/css";
-import { stack } from "../../styled-system/patterns";
-import { useTheme } from "../hooks/useTheme";
+import { css } from "../../../styled-system/css";
+import { stack } from "../../../styled-system/patterns";
+import { useTheme } from "../../hooks/useTheme";
 
 const LINK_ITEMS = [
   { id: 1, label: "깃허브", href: "https://github.com/DaleStudy/daleui" },

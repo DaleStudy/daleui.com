@@ -1,7 +1,7 @@
 import { Flex, Link } from "daleui";
-import { css } from "../../styled-system/css";
-import { flex } from "../../styled-system/patterns";
-import { getCopyrightYear } from "../utils/getCopyrightYear";
+import { css } from "../../../styled-system/css";
+import { flex } from "../../../styled-system/patterns";
+import { getCopyrightYear } from "../../utils/getCopyrightYear";
 
 const FOOTER_ITEMS = [
   { label: "GitHub", href: "https://github.com/DaleStudy/daleui" },
