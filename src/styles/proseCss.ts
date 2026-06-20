@@ -104,6 +104,7 @@ export const proseCss = defineGlobalStyles({
     marginY: "32",
   },
   ".prose img, .prose video": {
+    display: "inline-block",
     maxWidth: "100%",
     height: "auto",
     borderRadius: "8px",
