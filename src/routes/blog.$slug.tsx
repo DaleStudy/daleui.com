@@ -52,8 +52,31 @@ export default function BlogSlug({ loaderData }: Route.ComponentProps) {
     <>
       <Navigation />
       <VStack as="main" className={css({ flex: 1 })}>
-        <meta property="og:title" content={`${frontmatter.title} | Dale UI`} />
         <meta name="description" content={frontmatter.description ?? ""} />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={`${frontmatter.title} | Dale UI`} />
+        <meta
+          property="og:description"
+          content={frontmatter.description ?? ""}
+        />
+        <meta
+          property="og:url"
+          content={`https://www.daleui.com/blog/${slug}`}
+        />
+        <meta
+          property="og:image"
+          content="https://www.daleui.com/og-image.png"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${frontmatter.title} | Dale UI`} />
+        <meta
+          name="twitter:description"
+          content={frontmatter.description ?? ""}
+        />
+        <meta
+          name="twitter:image"
+          content="https://www.daleui.com/og-image.png"
+        />
         <Box
           as="article"
           ref={articleRef}
