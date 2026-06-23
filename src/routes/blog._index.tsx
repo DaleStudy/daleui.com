@@ -5,17 +5,13 @@ import { css } from "../../styled-system/css";
 import { listBlog } from "../content/blog/loader";
 import { UserProfile } from "../components/UserProfile";
 import { Navigation } from "../sections/blog/Navigation";
+import { staticOgImageUrl } from "../og/ogImage";
+import { SeoMeta } from "../components/SeoMeta";
 
-// eslint-disable-next-line react-refresh/only-export-components
-export function meta() {
-  return [
-    { title: "블로그 | Dale UI" },
-    {
-      name: "description",
-      content: "달레UI 팀이 디자인 시스템을 만들며 쌓은 기록을 공유합니다.",
-    },
-  ];
-}
+const title = "블로그 | Dale UI";
+const description =
+  "달레UI 팀이 디자인 시스템을 만들며 쌓은 기록을 공유합니다.";
+const image = staticOgImageUrl("blog");
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function loader() {
@@ -31,6 +27,7 @@ export default function BlogIndex({ loaderData }: Route.ComponentProps) {
 
   return (
     <>
+      <SeoMeta title={title} description={description} image={image} />
       <Navigation />
       <Box
         as="main"

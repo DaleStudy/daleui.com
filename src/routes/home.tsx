@@ -7,11 +7,13 @@ import { Mission } from "../sections/marketing/Mission";
 import { Team } from "../sections/marketing/Team";
 import { Navigation } from "../sections/marketing/Navigation";
 import { Footer } from "../sections/marketing/Footer";
+import { staticOgImageUrl } from "../og/ogImage";
+import { SeoMeta } from "../components/SeoMeta";
 
-// eslint-disable-next-line react-refresh/only-export-components
-export function meta() {
-  return [{ title: "Dale UI" }];
-}
+const title = "Dale UI";
+const description =
+  "쉽고 가볍게 사용하는 오픈소스 디자인 시스템. 달레UI로 일관된 사용자 경험을 빠르게 만들어보세요.";
+const image = staticOgImageUrl("home");
 
 export default function Home() {
   const scrollToSection = useCallback((sectionId: string) => {
@@ -56,6 +58,7 @@ export default function Home() {
 
   return (
     <>
+      <SeoMeta title={title} description={description} image={image} />
       <Navigation />
       <Header handleScrollToSection={setHashNavigation} />
       <Mission />
