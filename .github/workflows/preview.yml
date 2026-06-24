@@ -17,7 +17,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       # 댓글에 표시할 짧은 커밋 해시와 UTC 시각 계산
       - name: Prepare commit metadata
