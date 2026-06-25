@@ -155,7 +155,7 @@ export default function BlogSlug({ loaderData }: Route.ComponentProps) {
           </Box>
 
           <Box as="section" aria-label="댓글" className={css({ mt: "48" })}>
-            <Giscus key={slug} />
+            <Giscus />
           </Box>
         </Box>
       </VStack>

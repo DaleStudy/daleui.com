@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildGiscusAttributes, giscusConfig } from "./giscus";
+import { buildGiscusAttributes, giscusConfig, pathnameToTerm } from "./giscus";
 
 describe("buildGiscusAttributes", () => {
   it("설정 상수를 data 속성으로 전달한다", () => {
@@ -31,5 +31,19 @@ describe("buildGiscusAttributes", () => {
   it("테마 인자를 data-theme에 반영한다", () => {
     expect(buildGiscusAttributes("light")["data-theme"]).toBe("light");
     expect(buildGiscusAttributes("dark")["data-theme"]).toBe("dark");
+  });
+});
+
+describe("pathnameToTerm", () => {
+  it("앞 슬래시를 떼어 term으로 쓴다", () => {
+    expect(pathnameToTerm("/blog/my-post")).toBe("blog/my-post");
+  });
+
+  it("루트 경로는 index로 매핑한다", () => {
+    expect(pathnameToTerm("/")).toBe("index");
+  });
+
+  it("확장자는 제거한다", () => {
+    expect(pathnameToTerm("/blog/my-post.html")).toBe("blog/my-post");
   });
 });
