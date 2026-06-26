@@ -9,28 +9,3 @@ export const giscusConfig = {
   category: import.meta.env.VITE_GISCUS_CATEGORY ?? "블로그",
   categoryId: import.meta.env.VITE_GISCUS_CATEGORY_ID ?? "DIC_kwDOMovgOM4CqB1o",
 } as const;
-
-export const GISCUS_SCRIPT_SRC = "https://giscus.app/client.js";
-export const GISCUS_ORIGIN = "https://giscus.app";
-
-export type GiscusTheme = "light" | "dark";
-
-/** client.js `<script>`에 붙일 `data-*` 속성. term은 글의 discussion 번호다. */
-export function buildGiscusAttributes(
-  theme: GiscusTheme,
-  term: string,
-): Record<string, string> {
-  return {
-    "data-repo": giscusConfig.repo,
-    "data-repo-id": giscusConfig.repoId,
-    "data-category": giscusConfig.category,
-    "data-category-id": giscusConfig.categoryId,
-    "data-mapping": "number",
-    "data-term": term,
-    "data-reactions-enabled": "1",
-    "data-emit-metadata": "0",
-    "data-input-position": "bottom",
-    "data-theme": theme,
-    "data-lang": "ko",
-  };
-}
