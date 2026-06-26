@@ -25,10 +25,15 @@ jobs:
         run: |
           echo "short_sha=$(echo '${{ github.event.pull_request.head.sha }}' | cut -c1-8)" >> "$GITHUB_OUTPUT"
           echo "now=$(date -u '+%b %d %Y, %I:%M %p')" >> "$GITHUB_OUTPUT"
+          alias="pr-${{ github.event.pull_request.number }}"
+          echo "alias=$alias" >> "$GITHUB_OUTPUT"
+          echo "preview_url=https://$alias-daleui.dalestudy.workers.dev" >> "$GITHUB_OUTPUT"
 
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
       - run: bun run build
+        env:
+          VITE_SITE_URL: ${{ steps.commit.outputs.preview_url }}
 
       # 배포 시작 시점에 "In progress" 상태로 댓글을 먼저 남김(갱신)
       - name: Render in-progress comment
@@ -52,8 +57,8 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: "94480614a6df7731f1e4491bdac5c440"
           packageManager: bun
-          # 프로덕션을 건드리지 않는 미리보기(Preview URL) 버전 업로드
-          command: versions upload
+          # alias를 PR 번호로 고정해 빌드에 주입한 VITE_SITE_URL과 동일한 도메인을 보장.
+          command: versions upload --preview-alias ${{ steps.commit.outputs.alias }}
 
       # 배포 완료 후 동일 댓글을 성공 상태로 갱신(sticky)하여 댓글이 쌓이지 않도록 함
       - name: Render ready comment
@@ -61,7 +66,7 @@ jobs:
           STATUS: ✅ Ready
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           SHORT_SHA: ${{ steps.commit.outputs.short_sha }}
-          PREVIEW_URL: <a href='${{ steps.deploy.outputs.deployment-url }}'>Commit Preview URL</a>
+          PREVIEW_URL: <a href='${{ steps.commit.outputs.preview_url }}'>Commit Preview URL</a>
           NOW: ${{ steps.commit.outputs.now }}
         run: envsubst < .github/preview-comment.md > comment.md
       - name: Comment preview URL on PR
