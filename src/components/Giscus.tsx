@@ -2,19 +2,19 @@ import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useTheme } from "../hooks/useTheme";
 import {
-  buildGiscusAttributes,
-  giscusConfig,
   GISCUS_ORIGIN,
   GISCUS_SCRIPT_SRC,
+  buildGiscusAttributes,
+  giscusConfig,
   pathnameToTerm,
 } from "../constants/giscus";
 
 /**
- * giscus 기반 댓글 위젯.
+ * giscus 댓글 위젯.
  *
- * 글마다 재마운트하면(`key={slug}`) client.js가 매번 다시 실행돼 window의
- * message 리스너가 쌓인다. 그래서 한 번만 마운트하고, 글·테마 전환은 iframe에
- * `setConfig` 메시지를 보내 갱신한다.
+ * 글마다 재마운트하면(key={slug}) client.js가 다시 실행되면서 window에 걸리는
+ * message 리스너가 계속 쌓인다. 그래서 한 번만 마운트하고, 글·테마가 바뀌면
+ * iframe에 setConfig 메시지를 보내 갱신한다.
  */
 export function Giscus() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -22,10 +22,8 @@ export function Giscus() {
   const theme = isDark ? "dark" : "light";
   const { pathname } = useLocation();
 
-  // iframe load 시점에 최신 설정을 보내려고 ref로 들고 있는다.
-  const config = { theme, term: pathnameToTerm(pathname) };
-  const configRef = useRef(config);
-  configRef.current = config;
+  // iframe이 늦게 떴을 때 load 시점에 다시 보낼 최신 설정.
+  const configRef = useRef({ theme, term: pathnameToTerm(pathname) });
 
   useEffect(() => {
     const container = containerRef.current;
@@ -36,7 +34,7 @@ export function Giscus() {
       (!giscusConfig.repoId || !giscusConfig.categoryId)
     ) {
       console.warn(
-        "[giscus] VITE_GISCUS_REPO_ID / VITE_GISCUS_CATEGORY_ID가 비어 있어 댓글 위젯이 로드되지 않습니다.",
+        "[giscus] VITE_GISCUS_REPO_ID / VITE_GISCUS_CATEGORY_ID가 비어 있어 댓글 위젯이 뜨지 않습니다.",
       );
     }
 
@@ -50,8 +48,8 @@ export function Giscus() {
       );
     };
 
-    // iframe은 client.js가 비동기로 만든다. 생성되면 load 시 현재 설정을 한 번 더
-    // 보내, 로딩 중 테마·경로가 바뀌어 초기 postMessage가 유실돼도 맞춰지게 한다.
+    // client.js가 iframe을 비동기로 만든다. 만들어지면 load 때 현재 설정을 다시
+    // 보내, 로딩 중에 테마나 경로가 바뀌어도 어긋나지 않게 한다.
     const observer = new MutationObserver(() => {
       const iframe = container.querySelector<HTMLIFrameElement>(
         "iframe.giscus-frame",
@@ -75,17 +73,19 @@ export function Giscus() {
       observer.disconnect();
       container.replaceChildren();
     };
-    // 마운트 시 1회만. theme·pathname 변경은 아래 effect가 처리한다.
+    // 마운트 때 한 번만 실행한다. theme·pathname 변경은 아래 effect가 맡는다.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 글·테마 전환 시 위젯을 갱신.
+  // 글이나 테마가 바뀌면 위젯에 반영한다.
   useEffect(() => {
+    const config = { theme, term: pathnameToTerm(pathname) };
+    configRef.current = config;
     const iframe = containerRef.current?.querySelector<HTMLIFrameElement>(
       "iframe.giscus-frame",
     );
     iframe?.contentWindow?.postMessage(
-      { giscus: { setConfig: { theme, term: pathnameToTerm(pathname) } } },
+      { giscus: { setConfig: config } },
       GISCUS_ORIGIN,
     );
   }, [theme, pathname]);
