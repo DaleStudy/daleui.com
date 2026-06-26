@@ -29,6 +29,9 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
       - run: bun run build
+        env:
+          VITE_GISCUS_REPO_ID: ${{ vars.VITE_GISCUS_REPO_ID }}
+          VITE_GISCUS_CATEGORY_ID: ${{ vars.VITE_GISCUS_CATEGORY_ID }}
 
       # 배포 시작 시점에 "In progress" 상태로 댓글을 먼저 남김(갱신)
       - name: Render in-progress comment

@@ -19,6 +19,8 @@ jobs:
       - run: bun run build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VITE_GISCUS_REPO_ID: ${{ vars.VITE_GISCUS_REPO_ID }}
+          VITE_GISCUS_CATEGORY_ID: ${{ vars.VITE_GISCUS_CATEGORY_ID }}
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v4
         with:
