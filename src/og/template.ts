@@ -126,7 +126,7 @@ export function createOgTemplate(input: OgTemplateInput): OgNode {
       display: "flex",
       flexDirection: "column",
       justifyContent: "space-between",
-      padding: "72px",
+      padding: "56px",
       borderTop: `12px solid ${BRAND}`,
       fontFamily: "Pretendard",
       ...backgroundStyle,
