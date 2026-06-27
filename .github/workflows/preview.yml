@@ -31,6 +31,16 @@ jobs:
 
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
+
+      # OG 이미지를 CI 실행 간에 보존해 cache-cold로 매번 전부 재생성하는 것을 방지.
+      - name: Cache OG images
+        uses: actions/cache@v4
+        with:
+          path: public/og
+          key: og-${{ hashFiles('src/og/**', 'scripts/generate-og.mts', 'public/newLogoWithText.svg', 'public/og-background.png') }}
+          restore-keys: |
+            og-
+
       - run: bun run build
         env:
           VITE_SITE_URL: ${{ steps.commit.outputs.preview_url }}
