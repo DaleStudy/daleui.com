@@ -5,6 +5,7 @@ import type { Route } from "./+types/blog.$slug";
 import { css } from "../../styled-system/css";
 import { findBlog, listBlog } from "../content/blog/loader";
 import { UserProfile } from "../components/UserProfile";
+import { Giscus } from "../components/Giscus";
 import DirectionalLink from "../components/DirectionalLink";
 import { Navigation } from "../sections/blog/Navigation";
 
@@ -151,6 +152,10 @@ export default function BlogSlug({ loaderData }: Route.ComponentProps) {
                 <Box className={css({ flex: 1 })} />
               )}
             </div>
+          </Box>
+
+          <Box as="section" aria-label="댓글" className={css({ mt: "48" })}>
+            <Giscus term={slug} />
           </Box>
         </Box>
       </VStack>
