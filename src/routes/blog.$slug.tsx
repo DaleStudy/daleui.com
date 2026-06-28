@@ -8,6 +8,8 @@ import { UserProfile } from "../components/UserProfile";
 import { Giscus } from "../components/Giscus";
 import DirectionalLink from "../components/DirectionalLink";
 import { Navigation } from "../sections/blog/Navigation";
+import { SITE_URL, blogOgImageUrl } from "../og/ogImage";
+import { SeoMeta } from "../components/SeoMeta";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export async function loader({ params }: Route.LoaderArgs) {
@@ -53,30 +55,12 @@ export default function BlogSlug({ loaderData }: Route.ComponentProps) {
     <>
       <Navigation />
       <VStack as="main" className={css({ flex: 1 })}>
-        <meta name="description" content={frontmatter.description ?? ""} />
-        <meta property="og:type" content="article" />
-        <meta property="og:title" content={`${frontmatter.title} | Dale UI`} />
-        <meta
-          property="og:description"
-          content={frontmatter.description ?? ""}
-        />
-        <meta
-          property="og:url"
-          content={`https://www.daleui.com/blog/${slug}`}
-        />
-        <meta
-          property="og:image"
-          content="https://www.daleui.com/og-image.png"
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${frontmatter.title} | Dale UI`} />
-        <meta
-          name="twitter:description"
-          content={frontmatter.description ?? ""}
-        />
-        <meta
-          name="twitter:image"
-          content="https://www.daleui.com/og-image.png"
+        <SeoMeta
+          title={`${frontmatter.title} | Dale UI`}
+          description={frontmatter.description ?? ""}
+          image={blogOgImageUrl(slug)}
+          type="article"
+          url={`${SITE_URL}/blog/${slug}`}
         />
         <Box
           as="article"

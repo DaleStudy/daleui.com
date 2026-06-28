@@ -8,9 +8,10 @@
   "homepage": "https://www.daleui.com",
   "scripts": {
     "sync-blog": "bun scripts/sync-blog.mts",
-    "predev": "bun scripts/sync-blog.mts",
+    "generate-og": "bun scripts/generate-og.mts",
+    "predev": "bun scripts/sync-blog.mts && bun scripts/generate-og.mts",
     "dev": "react-router dev",
-    "prebuild": "bun scripts/sync-blog.mts",
+    "prebuild": "bun scripts/sync-blog.mts && bun scripts/generate-og.mts",
     "build": "tsc -b && react-router build",
     "format": "prettier --check .",
     "lint": "eslint .",
@@ -42,6 +43,7 @@
     "@mdx-js/rollup": "^3.1.1",
     "@pandacss/dev": "^1.11.3",
     "@react-router/dev": "^7.18.0",
+    "@resvg/resvg-js": "^2.6.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
@@ -71,6 +73,7 @@
     "vite": "^8.1.0",
     "vite-plugin-svgr": "^5.2.0",
     "vitest": "^4.1.9",
+    "satori": "^0.26.0",
     "wrangler": "^4.104.0"
   }
 }
