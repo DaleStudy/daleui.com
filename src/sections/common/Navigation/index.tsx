@@ -1,11 +1,12 @@
-import { Icon } from "daleui";
+import { HStack, Icon } from "daleui";
 import { useEffect, useState } from "react";
 import { css, cva } from "../../../../styled-system/css";
 import { NavLogo } from "./NavLogo";
 import { NavExternalLinks } from "./NavExternalLinks";
 import { NavLinks } from "./NavLinks";
+import { SponsorsButton } from "./SponsorsButton";
 
-const MENU_ID = "blog-nav-menu";
+const MENU_ID = "site-nav-menu";
 
 export function Navigation() {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
@@ -32,42 +33,46 @@ export function Navigation() {
   }, [isOpenMenu]);
 
   return (
-    <nav
+    <HStack
+      as="nav"
+      justify="center"
       className={css({
         position: "relative",
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        gap: "16",
-        width: "100%",
-        px: { base: "16", lg: "24" },
-        py: "8",
+        px: 16,
       })}
     >
-      <NavLogo />
-
-      {/* 햄버거바 */}
-      <button
-        type="button"
-        onClick={handleToggleMenu}
-        aria-label={isOpenMenu ? "메뉴 닫기" : "메뉴 열기"}
-        aria-expanded={isOpenMenu}
-        aria-controls={MENU_ID}
+      <HStack
         className={css({
-          display: { base: "inline-flex", lg: "none" },
-          marginLeft: "auto",
-          padding: "8",
-          cursor: "pointer",
+          maxWidth: "1024px",
+          width: "100%",
         })}
       >
-        <Icon tone="brand" name={isOpenMenu ? "x" : "menu"} size="lg" />
-      </button>
+        <NavLogo />
 
-      <div id={MENU_ID} className={menuPanelStyle({ isOpenMenu })}>
-        <NavLinks onNavigate={closeMenu} />
-        <NavExternalLinks />
-      </div>
-    </nav>
+        {/* 햄버거바 */}
+        <button
+          type="button"
+          onClick={handleToggleMenu}
+          aria-label={isOpenMenu ? "메뉴 닫기" : "메뉴 열기"}
+          aria-expanded={isOpenMenu}
+          aria-controls={MENU_ID}
+          className={css({
+            display: { base: "inline-flex", lg: "none" },
+            marginLeft: "auto",
+            padding: "8",
+            cursor: "pointer",
+          })}
+        >
+          <Icon tone="brand" name={isOpenMenu ? "x" : "menu"} size="lg" />
+        </button>
+
+        <div id={MENU_ID} className={menuPanelStyle({ isOpenMenu })}>
+          <SponsorsButton />
+          <NavLinks onNavigate={closeMenu} />
+          <NavExternalLinks />
+        </div>
+      </HStack>
+    </HStack>
   );
 }
 
@@ -89,7 +94,7 @@ const menuPanelStyle = cva({
       flex: 1,
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "space-between",
+      justifyContent: "end",
       position: "static",
       boxShadow: "none",
       backgroundColor: "transparent",
