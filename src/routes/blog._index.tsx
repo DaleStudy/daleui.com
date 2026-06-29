@@ -74,56 +74,64 @@ export default function BlogIndex({ loaderData }: Route.ComponentProps) {
               })}
             >
               {posts.map((post) => (
-                <li key={post.slug}>
-                  <Link to={`/blog/${post.slug}`} className="group">
-                    <Card
-                      outline
-                      className={css({
-                        _groupHover: {
-                          borderColor: "border.brand",
-                        },
-                      })}
-                    >
-                      <Card.Body>
-                        <Card.Title>
-                          <span
-                            className={css({
-                              _groupHover: {
-                                color: "fg.brand",
-                              },
-                            })}
-                          >
-                            {post.frontmatter.title}
-                          </span>
-                        </Card.Title>
-                        {post.frontmatter.description ? (
-                          <Card.Description>
-                            {post.frontmatter.description}
-                          </Card.Description>
-                        ) : null}
-
-                        <Flex
-                          justify="between"
-                          align="end"
-                          className={css({ mt: "12" })}
+                <li
+                  key={post.slug}
+                  className={`group ${css({ position: "relative" })}`}
+                >
+                  <Card
+                    outline
+                    className={css({
+                      _groupHover: {
+                        borderColor: "border.brand",
+                      },
+                    })}
+                  >
+                    <Card.Body>
+                      <Card.Title>
+                        <Link
+                          to={`/blog/${post.slug}`}
+                          className={css({
+                            _groupHover: {
+                              color: "fg.brand",
+                            },
+                            // 카드 전체를 클릭 영역으로 확장하는 stretched-link
+                            _after: {
+                              content: '""',
+                              position: "absolute",
+                              inset: 0,
+                            },
+                          })}
                         >
-                          <UserProfile
-                            authorGithubUrl={
-                              post.frontmatter.authorGithubUrl ?? ""
-                            }
-                            author={post.frontmatter.author}
-                            authorAvatar={post.frontmatter.authorAvatar ?? ""}
-                          />
+                          {post.frontmatter.title}
+                        </Link>
+                      </Card.Title>
+                      {post.frontmatter.description ? (
+                        <Card.Description>
+                          {post.frontmatter.description}
+                        </Card.Description>
+                      ) : null}
 
-                          <Text size="sm" tone="neutral">
-                            <time dateTime={post.frontmatter.date}>
-                              {post.frontmatter.date}
-                            </time>
-                          </Text>
-                        </Flex>
-                      </Card.Body>
-                    </Card>
-                  </Link>
+                      <Flex
+                        justify="between"
+                        align="end"
+                        className={css({ mt: "12" })}
+                      >
+                        <UserProfile
+                          authorGithubUrl={
+                            post.frontmatter.authorGithubUrl ?? ""
+                          }
+                          author={post.frontmatter.author}
+                          authorAvatar={post.frontmatter.authorAvatar ?? ""}
+                        />
+
+                        <Text size="sm" tone="neutral">
+                          <time dateTime={post.frontmatter.date}>
+                            {post.frontmatter.date}
+                          </time>
+                        </Text>
+                      </Flex>
+                    </Card.Body>
+                  </Card>
                 </li>
               ))}
             </ul>
