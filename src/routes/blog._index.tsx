@@ -117,9 +117,6 @@ export default function BlogIndex({ loaderData }: Route.ComponentProps) {
                         className={css({ mt: "12" })}
                       >
                         <UserProfile
-                          authorGithubUrl={
-                            post.frontmatter.authorGithubUrl ?? ""
-                          }
                           author={post.frontmatter.author}
                           authorAvatar={post.frontmatter.authorAvatar ?? ""}
                         />

@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Icon, Text, VStack } from "daleui";
+import { Box, Button, Flex, Heading, Icon, Link, Text, VStack } from "daleui";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import type { Route } from "./+types/blog.$slug";
@@ -84,11 +84,24 @@ export default function BlogSlug({ loaderData }: Route.ComponentProps) {
             </Button>
             <Heading level={1}>{frontmatter.title}</Heading>
             <Flex justify="between" align="end" className={css({ mt: "16" })}>
-              <UserProfile
-                authorGithubUrl={frontmatter.authorGithubUrl ?? ""}
-                author={frontmatter.author}
-                authorAvatar={frontmatter.authorAvatar ?? ""}
-              />
+              <Link
+                href={frontmatter.authorGithubUrl ?? ""}
+                external
+                size="sm"
+                underline={false}
+                aria-label={`${frontmatter.author}의 깃허브 프로필`}
+                className={css({
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8",
+                  fontWeight: "bold",
+                })}
+              >
+                <UserProfile
+                  author={frontmatter.author}
+                  authorAvatar={frontmatter.authorAvatar ?? ""}
+                />
+              </Link>
               <Text size="sm" tone="neutral">
                 <time dateTime={frontmatter.date}>{frontmatter.date}</time>
               </Text>
