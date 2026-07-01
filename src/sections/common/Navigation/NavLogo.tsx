@@ -1,16 +1,24 @@
 import { Flex, Tag } from "daleui";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { css } from "../../../../styled-system/css";
 import { useTheme } from "../../../hooks/useTheme";
 
+function getSectionLabel(pathname: string): string | null {
+  if (pathname.startsWith("/docs")) return "문서";
+  if (pathname.startsWith("/showcase")) return "모범사례";
+  if (pathname.startsWith("/blog")) return "블로그";
+  return null;
+}
+
 export function NavLogo() {
   const { isDark } = useTheme();
+  const { pathname } = useLocation();
+  const sectionLabel = getSectionLabel(pathname);
 
   return (
     <Flex
       className={css({
-        px: "16",
-        py: "8",
+        p: "16",
       })}
       align="center"
       gap="8"
@@ -24,7 +32,7 @@ export function NavLogo() {
           })}
         />
       </Link>
-      <Tag tone="brand">Blog</Tag>
+      {sectionLabel ? <Tag tone="brand">{sectionLabel}</Tag> : null}
     </Flex>
   );
 }

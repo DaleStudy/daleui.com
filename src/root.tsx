@@ -1,6 +1,7 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import "daleui/styles.css";
 import "./index.css";
+import { Navigation } from "./sections/common/Navigation";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -27,6 +28,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        <Navigation />
         {children}
         <ScrollRestoration />
         <Scripts />

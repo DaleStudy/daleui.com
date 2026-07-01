@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { css } from "../../styled-system/css";
 
 interface UnderConstructionProps {
-  /** 페이지 이름 (예: "문서", "쇼케이스") */
+  /** 페이지 이름 (예: "문서", "모범사례") */
   title: string;
 }
 

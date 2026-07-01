@@ -5,7 +5,6 @@ import { Header } from "../sections/marketing/Header";
 import { How } from "../sections/marketing/How";
 import { Mission } from "../sections/marketing/Mission";
 import { Team } from "../sections/marketing/Team";
-import { Navigation } from "../sections/marketing/Navigation";
 import { Footer } from "../sections/marketing/Footer";
 import { staticOgImageUrl } from "../og/ogImage";
 import { SeoMeta } from "../components/SeoMeta";
@@ -59,7 +58,6 @@ export default function Home() {
   return (
     <>
       <SeoMeta title={title} description={description} image={image} />
-      <Navigation />
       <Header handleScrollToSection={setHashNavigation} />
       <Mission />
       <How />
