@@ -7,7 +7,6 @@ import { findBlog, listBlog } from "../content/blog/loader";
 import { UserProfile } from "../components/UserProfile";
 import { Giscus } from "../components/Giscus";
 import DirectionalLink from "../components/DirectionalLink";
-import { Navigation } from "../sections/blog/Navigation";
 import { SITE_URL, blogOgImageUrl } from "../og/ogImage";
 import { SeoMeta } from "../components/SeoMeta";
 
@@ -53,15 +52,14 @@ export default function BlogSlug({ loaderData }: Route.ComponentProps) {
 
   return (
     <>
-      <Navigation />
+      <SeoMeta
+        title={`${frontmatter.title} | Dale UI`}
+        description={frontmatter.description ?? ""}
+        image={blogOgImageUrl(slug)}
+        type="article"
+        url={`${SITE_URL}/blog/${slug}`}
+      />
       <VStack as="main" className={css({ flex: 1 })}>
-        <SeoMeta
-          title={`${frontmatter.title} | Dale UI`}
-          description={frontmatter.description ?? ""}
-          image={blogOgImageUrl(slug)}
-          type="article"
-          url={`${SITE_URL}/blog/${slug}`}
-        />
         <Box
           as="article"
           ref={articleRef}

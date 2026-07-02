@@ -1,42 +1,15 @@
-import { Icon, type IconProps, Link } from "daleui";
+import { Icon, Link } from "daleui";
 import { css } from "../../../../styled-system/css";
 import { useTheme } from "../../../hooks/useTheme";
-
-type IconName = IconProps["name"];
-
-const LINK_ITEMS: {
-  id: number;
-  label: string;
-  href: string;
-  icon: IconName;
-}[] = [
-  {
-    id: 1,
-    label: "깃허브",
-    href: "https://github.com/DaleStudy/daleui",
-    icon: "GitHub",
-  },
-  {
-    id: 2,
-    label: "스토리북",
-    href: "https://main--675790d317ba346348aa3490.chromatic.com/",
-    icon: "Storybook",
-  },
-  {
-    id: 3,
-    label: "피그마 디자인",
-    href: "https://www.figma.com/community/file/1559487636467651573",
-    icon: "Figma",
-  },
-];
+import { EXTERNAL_LINKS } from "./links";
 
 export function NavExternalLinks() {
   const { isDark, toggleTheme } = useTheme();
   return (
     <ul className={navExternalLinksStyle}>
-      {LINK_ITEMS.map((item) => (
+      {EXTERNAL_LINKS.map((item) => (
         <li
-          key={item.id}
+          key={item.href}
           className={css({ display: "flex", alignItems: "center" })}
         >
           <Link
@@ -72,10 +45,9 @@ export function NavExternalLinks() {
 
 const navExternalLinksStyle = css({
   display: "flex",
+  justifyContent: { base: "end", lg: "start" },
   gap: "24",
   alignItems: "center",
-  justifyContent: "end",
-  width: { base: "100%", lg: "auto" },
   px: { base: "16", lg: "0" },
   py: { base: "8", lg: "0" },
 });

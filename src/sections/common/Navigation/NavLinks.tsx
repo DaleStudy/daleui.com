@@ -1,30 +1,13 @@
 import { Link } from "react-router";
 import { css } from "../../../../styled-system/css";
-
-const LINK_ITEMS = [
-  {
-    id: 1,
-    label: "docs",
-    href: "/docs",
-  },
-  {
-    id: 2,
-    label: "showcase",
-    href: "/showcase",
-  },
-  {
-    id: 3,
-    label: "blog",
-    href: "/blog",
-  },
-];
+import { INTERNAL_LINKS } from "./links";
 
 export function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <ul className={navLinksStyle}>
-      {LINK_ITEMS.map((item) => (
+      {INTERNAL_LINKS.map((item) => (
         <li
-          key={item.id}
+          key={item.href}
           className={css({ display: "flex", alignItems: "center" })}
         >
           <Link
@@ -50,10 +33,8 @@ export function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
 
 const navLinksStyle = css({
   display: "flex",
+  flexShrink: 0,
   gap: "24",
   flexDirection: { base: "column", lg: "row" },
-  justifyContent: { base: "stretch", lg: "end" },
-  alignItems: { base: "stretch", lg: "center" },
-  width: "100%",
   px: { base: "16", lg: "24" },
 });

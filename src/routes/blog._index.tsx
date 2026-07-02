@@ -4,7 +4,6 @@ import type { Route } from "./+types/blog._index";
 import { css } from "../../styled-system/css";
 import { listBlog } from "../content/blog/loader";
 import { UserProfile } from "../components/UserProfile";
-import { Navigation } from "../sections/blog/Navigation";
 import { staticOgImageUrl } from "../og/ogImage";
 import { SeoMeta } from "../components/SeoMeta";
 
@@ -28,7 +27,6 @@ export default function BlogIndex({ loaderData }: Route.ComponentProps) {
   return (
     <>
       <SeoMeta title={title} description={description} image={image} />
-      <Navigation />
       <Box
         as="main"
         className={css({
