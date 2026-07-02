@@ -59,7 +59,7 @@
     "globals": "^17.7.0",
     "happy-dom": "^20.10.6",
     "playwright": "^1.61.1",
-    "prettier": "^3.8.4",
+    "prettier": "^3.8.5",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-expressive-code": "^0.43.1",
     "rehype-external-links": "^3.0.0",
