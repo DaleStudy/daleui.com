@@ -220,6 +220,13 @@ function staticJobs(): OgJob[] {
         eyebrow: "블로그",
       },
     },
+    {
+      outRelative: "showcase.png",
+      template: {
+        title: "Dale UI 모범사례",
+        eyebrow: "모범사례",
+      },
+    },
   ];
 }
 
