@@ -5,6 +5,7 @@ import { Header } from "../sections/marketing/Header";
 import { How } from "../sections/marketing/How";
 import { Mission } from "../sections/marketing/Mission";
 import { Team } from "../sections/marketing/Team";
+import { Testimonials } from "../sections/marketing/Testimonials";
 import { Footer } from "../sections/marketing/Footer";
 import { staticOgImageUrl } from "../og/ogImage";
 import { SeoMeta } from "../components/SeoMeta";
@@ -64,6 +65,7 @@ export default function Home() {
       <Community />
       <Contribution />
       <Team />
+      <Testimonials />
       <Footer />
     </>
   );
