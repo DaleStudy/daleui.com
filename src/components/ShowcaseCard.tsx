@@ -21,8 +21,13 @@ export function ShowcaseCard({ card }: ShowcaseCardProps) {
         borderWidth: "sm",
         borderColor: "border.neutral",
         bg: "bg.neutral",
-        transition: "border-color 0.15s ease",
-        _hover: { borderColor: "border.brand" },
+        transition:
+          "border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease",
+        _hover: {
+          borderColor: "border.brand",
+          bg: "bg.brand.hover",
+          boxShadow: "0 0 0 2px token(colors.border.brand)",
+        },
       })}`}
     >
       <div
@@ -75,11 +80,17 @@ export function ShowcaseCard({ card }: ShowcaseCardProps) {
             {card.title}
           </a>
         </Text>
-        {card.description ? (
-          <Text size="md" tone="neutral" as="p">
-            {card.description}
-          </Text>
-        ) : null}
+        <p
+          className={css({
+            fontSize: "md",
+            color: "fg.neutral",
+            lineHeight: "balanced",
+            lineClamp: 3,
+            minHeight: "calc(3 * 1.5em)",
+          })}
+        >
+          {card.description}
+        </p>
         <Text size="sm" tone="neutral" className={css({ mt: "8" })}>
           {card.siteName}
         </Text>
