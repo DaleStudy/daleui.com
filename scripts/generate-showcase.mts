@@ -18,7 +18,7 @@ const OUT_PATH = join(
   "src",
   "content",
   "showcase",
-  "showcase.generated.json"
+  "showcase.generated.json",
 );
 const FALLBACK_IMAGE = "/og-background.png";
 const FETCH_TIMEOUT_SECONDS = 10;
@@ -66,7 +66,7 @@ async function loadPrevCards(): Promise<Map<string, CachedCard>> {
     return new Map(raw.map((card) => [card.url, card]));
   } catch (err) {
     console.warn(
-      `[generate-showcase] 이전 캐시 로드 실패, 초기화합니다: ${String(err)}`
+      `[generate-showcase] 이전 캐시 로드 실패, 초기화합니다: ${String(err)}`,
     );
     return new Map();
   }
@@ -81,7 +81,7 @@ function nonEmpty(value: string | undefined): string | undefined {
 function buildCard(
   entry: ShowcaseInput,
   og: Partial<OgFields>,
-  hash: string
+  hash: string,
 ): CachedCard {
   const ogImage = nonEmpty(og.image);
   const image = ogImage ? absoluteImage(ogImage, entry.url) : null;
@@ -124,7 +124,7 @@ async function extractOg(url: string): Promise<Partial<OgFields> | null> {
 
 async function resolveCard(
   entry: ShowcaseInput,
-  prev: Map<string, CachedCard>
+  prev: Map<string, CachedCard>,
 ): Promise<{ card: CachedCard; status: "cached" | "fetched" | "fallback" }> {
   const hash = hashEntry(entry);
   const cached = prev.get(entry.url);
@@ -153,12 +153,12 @@ async function main(): Promise<void> {
     const parsed = showcaseInputSchema.safeParse(entry);
     if (!parsed.success) {
       throw new Error(
-        `[generate-showcase] entries.ts[${i}] 검증 실패:\n${parsed.error.message}`
+        `[generate-showcase] entries.ts[${i}] 검증 실패:\n${parsed.error.message}`,
       );
     }
     if (seen.has(parsed.data.url)) {
       throw new Error(
-        `[generate-showcase] entries.ts[${i}] 중복 URL: ${parsed.data.url}`
+        `[generate-showcase] entries.ts[${i}] 중복 URL: ${parsed.data.url}`,
       );
     }
     seen.add(parsed.data.url);
@@ -170,14 +170,14 @@ async function main(): Promise<void> {
 
   const limit = pLimit(FETCH_CONCURRENCY);
   const resolved = await Promise.all(
-    entries.map((entry) => limit(() => resolveCard(entry, prev)))
+    entries.map((entry) => limit(() => resolveCard(entry, prev))),
   );
 
   const cards: CachedCard[] = [];
   for (const { card, status } of resolved) {
     if (status === "fallback") {
       console.warn(
-        `[generate-showcase] OG 추출 실패, fallback 카드 사용: ${card.url}`
+        `[generate-showcase] OG 추출 실패, fallback 카드 사용: ${card.url}`,
       );
     }
     counts[status]++;
@@ -192,7 +192,7 @@ async function main(): Promise<void> {
 
   console.log(
     `[generate-showcase] 카드 ${cards.length}개 생성 ` +
-      `(신규 fetch ${counts.fetched}, 캐시 ${counts.cached}, fallback ${counts.fallback}).`
+      `(신규 fetch ${counts.fetched}, 캐시 ${counts.cached}, fallback ${counts.fallback}).`,
   );
 }
 

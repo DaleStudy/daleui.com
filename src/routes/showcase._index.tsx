@@ -1,6 +1,6 @@
 import { Box, Heading, Text, VStack } from "daleui";
 import type { Route } from "./+types/showcase._index";
-import { css } from "../../styled-system/css";
+import { sva } from "../../styled-system/css";
 import { listShowcase } from "../content/showcase/loader";
 import { ShowcaseCard } from "../components/ShowcaseCard";
 import { staticOgImageUrl } from "../og/ogImage";
@@ -17,53 +17,22 @@ export function loader() {
 
 export default function ShowcaseIndex({ loaderData }: Route.ComponentProps) {
   const { cards } = loaderData;
+  const styles = showcasePage();
 
   return (
     <>
       <SeoMeta title={title} description={description} image={image} />
-      <Box as="main" className={css({ flex: 1 })}>
-        <VStack
-          as="header"
-          className={css({ py: "64", bgColor: "bg.brand", gap: "16" })}
-        >
+      <Box as="main" className={styles.main}>
+        <VStack as="header" className={styles.header}>
           <Heading level={1}>모범사례</Heading>
-          <p
-            className={css({
-              textStyle: "body.lg",
-              fontWeight: "semibold",
-              color: "fg.neutral.disabled",
-              textAlign: "center",
-              px: "16",
-            })}
-          >
-            {description}
-          </p>
+          <p className={styles.tagline}>{description}</p>
         </VStack>
 
-        <Box
-          className={css({
-            width: "100%",
-            maxWidth: "1024px",
-            mx: "auto",
-            px: { base: "16", md: "24" },
-            py: { base: "40", md: "48" },
-          })}
-        >
+        <Box className={styles.container}>
           {cards.length === 0 ? (
             <Text tone="neutral">아직 등록된 사례가 없습니다.</Text>
           ) : (
-            <ul
-              className={css({
-                display: "grid",
-                gridTemplateColumns: {
-                  base: "1fr",
-                  sm: "repeat(2, 1fr)",
-                  lg: "repeat(3, 1fr)",
-                },
-                gap: "24",
-                listStyle: "none",
-              })}
-            >
+            <ul className={styles.grid}>
               {cards.map((card) => (
                 <li key={card.url}>
                   <ShowcaseCard card={card} />
@@ -76,3 +45,35 @@ export default function ShowcaseIndex({ loaderData }: Route.ComponentProps) {
     </>
   );
 }
+
+const showcasePage = sva({
+  slots: ["main", "header", "tagline", "container", "grid"],
+  base: {
+    main: { flex: 1 },
+    header: { py: "64", bgColor: "bg.brand", gap: "16" },
+    tagline: {
+      textStyle: "body.lg",
+      fontWeight: "semibold",
+      color: "fg.neutral.disabled",
+      textAlign: "center",
+      px: "16",
+    },
+    container: {
+      width: "100%",
+      maxWidth: "1024px",
+      mx: "auto",
+      px: { base: "16", md: "24" },
+      py: { base: "40", md: "48" },
+    },
+    grid: {
+      display: "grid",
+      gridTemplateColumns: {
+        base: "1fr",
+        sm: "repeat(2, 1fr)",
+        lg: "repeat(3, 1fr)",
+      },
+      gap: "24",
+      listStyle: "none",
+    },
+  },
+});
