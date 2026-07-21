@@ -160,7 +160,11 @@ export function Testimonials({
           className={css({
             position: "relative",
             width: "100%",
-            overflow: "hidden",
+            overflowX: "auto",
+            scrollbarWidth: "none",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
             maskImage:
               "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
             _hover: {
