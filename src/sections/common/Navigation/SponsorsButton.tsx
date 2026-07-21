@@ -1,4 +1,4 @@
-import { Box, Button, Icon, Link } from "daleui";
+import { Box, Button, Icon } from "daleui";
 import { css } from "../../../../styled-system/css";
 import { SPONSOR_URL } from "./links";
 
@@ -9,19 +9,17 @@ export function SponsorsButton() {
         display: { base: "none", lg: "flex" },
       })}
     >
-      <Link
+      <a
         href={SPONSOR_URL}
-        external
-        underline={false}
-        tone="neutral"
-        size="lg"
         aria-label="후원하기"
+        target="_blank"
+        rel="noopener noreferrer"
       >
         <Button variant="outline">
           <Icon name="handHeart" />
           후원하기
         </Button>
-      </Link>
+      </a>
     </Box>
   );
 }
