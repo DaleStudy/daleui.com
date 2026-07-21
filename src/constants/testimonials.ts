@@ -42,27 +42,6 @@ export const testimonials: Testimonial[] = [
     avatar: "https://avatars.githubusercontent.com/u/38199103",
   },
   {
-    name: "Ria (리아)",
-    affiliation: "엔지니어",
-    quote:
-      "오픈소스라 직접 기여하면서 배우는 재미가 있어요. 커뮤니티도 활발해서 질문하면 금방 답이 돌아옵니다.",
-    avatar: "https://avatars.githubusercontent.com/u/83909755",
-  },
-  {
-    name: "윤섭",
-    affiliation: "엔지니어",
-    quote:
-      "토큰 기반이라 브랜드에 맞춰 커스터마이징하기 편해요. 문서도 잘 되어 있어서 온보딩이 빨랐습니다.",
-    avatar: "https://avatars.githubusercontent.com/u/47362439?v=4",
-  },
-  {
-    name: "자혜",
-    affiliation: "디자이너",
-    quote:
-      "디자이너와 개발자가 같은 컴포넌트를 기준으로 이야기할 수 있어서 협업이 훨씬 매끄러워졌어요.",
-    avatar: "https://avatars.githubusercontent.com/u/89135410",
-  },
-  {
     name: "효성",
     affiliation: "엔지니어",
     quote:
@@ -75,5 +54,12 @@ export const testimonials: Testimonial[] = [
     quote:
       "일관된 토큰과 컴포넌트 덕분에 디자인 의도가 개발까지 그대로 전달돼서 만족스러워요.",
     avatar: "https://avatars.githubusercontent.com/u/69985950",
+  },
+  {
+    name: "자혜",
+    affiliation: "디자이너",
+    quote:
+      "디자이너와 개발자가 같은 컴포넌트를 기준으로 이야기할 수 있어서 협업이 훨씬 매끄러워졌어요.",
+    avatar: "https://avatars.githubusercontent.com/u/89135410",
   },
 ];
