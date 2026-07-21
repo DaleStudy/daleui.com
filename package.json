@@ -9,9 +9,10 @@
   "scripts": {
     "sync-blog": "bun scripts/sync-blog.mts",
     "generate-og": "bun scripts/generate-og.mts",
-    "predev": "bun scripts/sync-blog.mts && bun scripts/generate-og.mts",
+    "generate-showcase": "bun scripts/generate-showcase.mts",
+    "predev": "bun scripts/sync-blog.mts && bun scripts/generate-og.mts && bun scripts/generate-showcase.mts",
     "dev": "react-router dev",
-    "prebuild": "bun scripts/sync-blog.mts && bun scripts/generate-og.mts",
+    "prebuild": "bun scripts/sync-blog.mts && bun scripts/generate-og.mts && bun scripts/generate-showcase.mts",
     "build": "tsc -b && react-router build",
     "format": "prettier --check .",
     "lint": "eslint .",
@@ -58,6 +59,8 @@
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.7.0",
     "happy-dom": "^20.10.6",
+    "open-graph-scraper": "^6.12.0",
+    "p-limit": "^7.3.1",
     "playwright": "^1.61.1",
     "prettier": "^3.8.5",
     "rehype-autolink-headings": "^7.1.0",
@@ -68,12 +71,12 @@
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
     "remark-mdx-frontmatter": "^5.2.0",
+    "satori": "^0.26.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.62.1",
     "vite": "^8.1.4",
     "vite-plugin-svgr": "^5.2.0",
     "vitest": "^4.1.10",
-    "satori": "^0.26.0",
     "wrangler": "^4.104.0"
   }
 }
