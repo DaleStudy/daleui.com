@@ -1,13 +1,17 @@
-export interface Testimonial {
+import { z } from "zod";
+
+export const testimonialSchema = z.object({
   /** 인용한 사람의 이름 */
-  name: string;
+  name: z.string().trim().min(1),
   /** 소속 또는 역할 (예: 엔지니어, 디자이너) */
-  affiliation: string;
+  affiliation: z.string().trim().min(1),
   /** 인용문 */
-  quote: string;
+  quote: z.string().trim().min(1),
   /** 프로필 이미지 URL (없으면 이름 첫 글자로 이니셜 아바타 표시) */
-  avatar?: string;
-}
+  avatar: z.url().optional(),
+});
+
+export type Testimonial = z.infer<typeof testimonialSchema>;
 
 /**
  * 마케팅 페이지 Testimonials 섹션에 노출되는 사용자/기여자 후기 목록.
