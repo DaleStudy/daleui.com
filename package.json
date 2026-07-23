@@ -11,7 +11,7 @@
     "generate-og": "bun scripts/generate-og.mts",
     "predev": "bun scripts/sync-blog.mts && bun scripts/generate-og.mts",
     "dev": "react-router dev",
-    "prebuild": "bun scripts/sync-blog.mts && bun scripts/generate-og.mts",
+    "prebuild": "bun scripts/sync-blog.mts && bun scripts/generate-og.mts && bun scripts/copy-llms-txt.mts",
     "build": "tsc -b && react-router build",
     "format": "prettier --check .",
     "lint": "eslint .",
