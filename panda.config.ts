@@ -58,6 +58,14 @@ export default defineConfig({
             transform: "rotate(360deg)",
           },
         },
+        marquee: {
+          from: {
+            transform: "translateX(0)",
+          },
+          to: {
+            transform: "translateX(-50%)",
+          },
+        },
       },
       tokens: {
         borders,
