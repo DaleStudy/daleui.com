@@ -1,4 +1,3 @@
-import { cloudflare } from "@cloudflare/vite-plugin";
 import { codecovVitePlugin } from "@codecov/vite-plugin";
 import mdx from "@mdx-js/rollup";
 import { reactRouter } from "@react-router/dev/vite";
@@ -46,7 +45,6 @@ export default defineConfig({
     },
     reactRouter(),
     svgr(),
-    cloudflare(),
     codecovVitePlugin({
       enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
       bundleName: "daleui-bundle",
