@@ -1,0 +1,104 @@
+import { Text } from "daleui";
+import { css, sva } from "../../styled-system/css";
+import type { ShowcaseCard as ShowcaseCardData } from "../content/showcase/schema";
+
+const FALLBACK_IMAGE = "/og-background.png";
+
+export interface ShowcaseCardProps {
+  card: ShowcaseCardData;
+}
+
+export function ShowcaseCard({ card }: ShowcaseCardProps) {
+  const styles = showcaseCard();
+
+  return (
+    <article className={`group ${styles.article}`}>
+      <div className={styles.thumbnail}>
+        <img
+          src={card.image}
+          alt={`${card.title} 미리보기`}
+          loading="lazy"
+          onError={(e) => {
+            const img = e.currentTarget;
+            if (img.src.endsWith(FALLBACK_IMAGE)) return;
+            img.src = FALLBACK_IMAGE;
+          }}
+          className={styles.image}
+        />
+      </div>
+
+      <div className={styles.body}>
+        <Text size="lg" weight="semibold" as="p">
+          <a
+            href={card.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.link}
+          >
+            {card.title}
+          </a>
+        </Text>
+        <p className={styles.description}>{card.description}</p>
+        <Text size="sm" tone="neutral" className={css({ mt: "8" })}>
+          {card.siteName}
+        </Text>
+      </div>
+    </article>
+  );
+}
+
+const showcaseCard = sva({
+  slots: ["article", "thumbnail", "image", "body", "link", "description"],
+  base: {
+    article: {
+      display: "flex",
+      flexDirection: "column",
+      position: "relative",
+      overflow: "hidden",
+      height: "100%",
+      borderRadius: "md",
+      borderWidth: "sm",
+      borderColor: "border.neutral",
+      bg: "bg.neutral",
+      transition:
+        "border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease",
+      _hover: {
+        borderColor: "border.brand",
+        bg: "bg.brand.hover",
+        boxShadow: "0 0 0 2px token(colors.border.brand)",
+      },
+    },
+    thumbnail: {
+      aspectRatio: "1200 / 630",
+      overflow: "hidden",
+      bgColor: "bg.neutral",
+    },
+    image: {
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+      display: "block",
+    },
+    body: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "4",
+      p: "16",
+    },
+    link: {
+      _groupHover: { color: "fg.brand" },
+      _after: {
+        content: '""',
+        position: "absolute",
+        inset: 0,
+      },
+    },
+    description: {
+      fontSize: "md",
+      color: "fg.neutral",
+      lineHeight: "balanced",
+      lineClamp: 3,
+      minHeight: "calc(3 * 1.5em)",
+    },
+  },
+});
