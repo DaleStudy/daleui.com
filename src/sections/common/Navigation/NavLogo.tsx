@@ -4,7 +4,6 @@ import { css } from "../../../../styled-system/css";
 import { useTheme } from "../../../hooks/useTheme";
 
 function getSectionLabel(pathname: string): string | null {
-  if (pathname.startsWith("/docs")) return "문서";
   if (pathname.startsWith("/showcase")) return "모범사례";
   if (pathname.startsWith("/blog")) return "블로그";
   return null;

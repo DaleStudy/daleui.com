@@ -13,4 +13,5 @@ export default [
     route("blog/:slug", "routes/blog.$slug.tsx"),
   ]),
   route("docs", "routes/docs._index.tsx"),
+  route("docs/:slug", "routes/docs.$slug.tsx"),
 ] satisfies RouteConfig;
