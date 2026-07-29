@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router";
 import { css, cva } from "../../../styled-system/css";
+import { scrollSmoothly } from "../../utils/scrollSmoothly";
 
 /** 목차 항목 */
 export interface TocItem {
@@ -14,12 +16,38 @@ interface DocsTocProps {
   items: TocItem[];
   /** 현재 활성화된 항목 id */
   activeId?: string;
+  /** 목차 링크로 이동을 시작했을 때 */
+  onNavigateStart?: (id: string) => void;
+  /** 그 이동의 스크롤이 끝났을 때 */
+  onNavigateEnd?: (id: string) => void;
 }
 
-export function DocsToc({ items, activeId }: DocsTocProps) {
+export function DocsToc({
+  items,
+  activeId,
+  onNavigateStart,
+  onNavigateEnd,
+}: DocsTocProps) {
+  const navigate = useNavigate();
+
   if (items.length === 0) {
     return null;
   }
+
+  const handleClick = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    id: string,
+  ) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+      return;
+    }
+    event.preventDefault();
+    onNavigateStart?.(id);
+    scrollSmoothly(
+      () => navigate(`#${id}`, { preventScrollReset: true }),
+      () => onNavigateEnd?.(id),
+    );
+  };
 
   return (
     <nav aria-label="이 문서의 목차">
@@ -29,6 +57,7 @@ export function DocsToc({ items, activeId }: DocsTocProps) {
           <li key={item.id}>
             <a
               href={`#${item.id}`}
+              onClick={(event) => handleClick(event, item.id)}
               aria-current={item.id === activeId ? "location" : undefined}
               className={link({
                 active: item.id === activeId,
@@ -45,8 +74,8 @@ export function DocsToc({ items, activeId }: DocsTocProps) {
 }
 
 const heading = css({
-  textStyle: "label.md",
-  fontWeight: "semibold",
+  textStyle: "label.sm",
+  fontWeight: "bold",
   color: "fg.neutral.active",
   mb: "12",
 });
@@ -54,6 +83,10 @@ const heading = css({
 const list = css({
   display: "flex",
   flexDirection: "column",
+  gap: "4",
+  borderLeftWidth: "1px",
+  borderLeftStyle: "solid",
+  borderColor: "border.neutral",
 });
 
 const link = cva({
@@ -62,18 +95,25 @@ const link = cva({
     textDecoration: "none",
     textStyle: "body.sm",
     py: "4",
-    borderRadius: "sm",
+    ml: "-1px",
+    borderLeftWidth: "2px",
+    borderLeftStyle: "solid",
     transition: "0.15s",
-    _hover: { color: "fg.brand" },
+    _hover: { color: "fg.neutral.active" },
   },
   variants: {
     active: {
-      true: { color: "fg.brand", fontWeight: "medium" },
-      false: { color: "fg.neutral" },
+      true: {
+        borderColor: "fg.brand",
+        color: "fg.brand",
+        fontWeight: "semibold",
+        _hover: { color: "fg.brand" },
+      },
+      false: { borderColor: "transparent", color: "fg.neutral" },
     },
     nested: {
-      true: { pl: "16" },
-      false: { pl: "0" },
+      true: { pl: "28px" },
+      false: { pl: "14px" },
     },
   },
 });

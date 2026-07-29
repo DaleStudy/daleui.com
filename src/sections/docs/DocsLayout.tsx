@@ -6,20 +6,19 @@ import { DocsSidebar } from "./DocsSidebar";
 import { DocsToc, type TocItem } from "./DocsToc";
 import { DocsPagination } from "./DocsPagination";
 import { findCategoryTitle } from "./docsNav";
+import { useActiveTocId } from "../../hooks/useActiveTocId";
+import { useHashFocus } from "../../hooks/useHashFocus";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { getCopyrightYear } from "../../utils/getCopyrightYear";
 
 const GITHUB_REPO_URL = "https://github.com/DaleStudy/daleui.com";
-const SIDEBAR_WIDTH = "288px";
-const TOC_WIDTH = "240px";
-/** 헤더(DocsHeader) 높이. sticky 오프셋 계산에 사용합니다. */
-const HEADER_OFFSET = "64px";
 
 interface DocsLayoutProps {
   /** 현재 문서 id */
   currentId: string;
   /** 우측 목차 항목 */
   toc?: TocItem[];
-  /** 현재 활성화된 목차 항목 id */
+  /** 활성 목차 항목 id를 직접 지정합니다. 생략하면 스크롤 위치로 판정합니다. */
   activeTocId?: string;
   /**
    * GitHub 편집 링크가 가리킬 경로.
@@ -37,8 +36,18 @@ export function DocsLayout({
   children,
 }: DocsLayoutProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [pinnedTocId, setPinnedTocId] = useState<string>();
   const closeDrawer = () => setIsDrawerOpen(false);
   const styles = docsLayout();
+  const isTocVisible = useMediaQuery(TOC_MEDIA_QUERY);
+  const scrolledTocId = useActiveTocId(
+    toc.map((item) => item.id),
+    HEADING_OFFSET,
+    isTocVisible && activeTocId === undefined,
+  );
+  // 부드럽게 이동하는 동안에는 중간 섹션을 훑지 않고 목적지를 활성으로 둡니다.
+  const currentTocId = activeTocId ?? pinnedTocId ?? scrolledTocId;
+  useHashFocus();
 
   const category = findCategoryTitle(currentId);
   const editUrl = editPath
@@ -119,13 +128,29 @@ export function DocsLayout({
 
         {toc.length > 0 && (
           <Box as="aside" className={styles.toc}>
-            <DocsToc items={toc} activeId={activeTocId} />
+            <DocsToc
+              items={toc}
+              activeId={currentTocId}
+              onNavigateStart={setPinnedTocId}
+              onNavigateEnd={(id) =>
+                setPinnedTocId((current) =>
+                  current === id ? undefined : current,
+                )
+              }
+            />
           </Box>
         )}
       </Box>
     </>
   );
 }
+
+const SIDEBAR_WIDTH = "288px";
+const TOC_WIDTH = "240px";
+const HEADER_OFFSET = "64px";
+const HEADING_OFFSET = 96;
+/** 목차는 `xl` 이상에서만 노출되므로(`docsLayout.toc`) 스크롤 구독도 같은 조건으로 제한합니다. */
+const TOC_MEDIA_QUERY = "(min-width: 1280px)";
 
 const docsLayout = sva({
   slots: [
@@ -212,6 +237,9 @@ const docsLayout = sva({
     content: {
       width: "100%",
       maxWidth: "768px",
+      "& :where(h2, h3)": {
+        scrollMarginTop: `${HEADING_OFFSET}px`,
+      },
     },
     category: {
       textStyle: "caption",
