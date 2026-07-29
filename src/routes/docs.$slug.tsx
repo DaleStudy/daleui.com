@@ -5,6 +5,64 @@ import { DocsLayout } from "../sections/docs/DocsLayout";
 import type { TocItem } from "../sections/docs/DocsToc";
 import { DOCS_FLAT_ITEMS, findCategoryTitle } from "../sections/docs/docsNav";
 
+interface PlaceholderSection {
+  id: string;
+  label: string;
+  paragraphs: number;
+  children?: PlaceholderSection[];
+}
+
+/**
+ * 실제 문서 본문(MDX)이 붙으면 제거합니다.
+ */
+const SECTIONS: PlaceholderSection[] = [
+  { id: "overview", label: "개요", paragraphs: 10 },
+  {
+    id: "usage",
+    label: "사용법",
+    paragraphs: 8,
+    children: [
+      { id: "usage-basic", label: "기본 사용", paragraphs: 10 },
+      { id: "usage-variants", label: "변형", paragraphs: 12 },
+      { id: "usage-composition", label: "조합", paragraphs: 10 },
+    ],
+  },
+  {
+    id: "props",
+    label: "Props",
+    paragraphs: 8,
+    children: [
+      { id: "props-required", label: "필수 Props", paragraphs: 10 },
+      { id: "props-optional", label: "선택 Props", paragraphs: 12 },
+    ],
+  },
+  { id: "a11y", label: "접근성", paragraphs: 14 },
+  { id: "related", label: "관련 문서", paragraphs: 6 },
+];
+
+const DOCS_TOC: TocItem[] = SECTIONS.flatMap((section) => [
+  { id: section.id, label: section.label, depth: 2 },
+  ...(section.children ?? []).map((child) => ({
+    id: child.id,
+    label: child.label,
+    depth: 3 as const,
+  })),
+]);
+
+function Placeholder({ paragraphs }: { paragraphs: number }) {
+  return (
+    <>
+      {Array.from({ length: paragraphs }, (_, index) => (
+        <Text key={index} as="p" tone="neutral" className={paragraph}>
+          본문 콘텐츠 영역입니다. 목차 활성 상태와 sticky 레이아웃을 확인하기
+          위해 스크롤 분량을 채운 플레이스홀더 단락입니다. 실제 문서에서는 이
+          자리에 설명·예제·표가 들어갑니다.
+        </Text>
+      ))}
+    </>
+  );
+}
+
 export default function DocsSlug() {
   const navigate = useNavigate();
   const { slug } = useParams();
@@ -37,13 +95,6 @@ export default function DocsSlug() {
 
   const category = findCategoryTitle(item.id);
 
-  const toc: TocItem[] = [
-    { id: "overview", label: "개요", depth: 2 },
-    { id: "usage", label: "사용법", depth: 2 },
-    { id: "props", label: "Props", depth: 2 },
-    { id: "a11y", label: "접근성", depth: 2 },
-  ];
-
   return (
     <>
       <title>{`${item.title} | Dale UI`}</title>
@@ -51,7 +102,7 @@ export default function DocsSlug() {
         name="description"
         content={`${item.title} 문서 - 달레UI 디자인 시스템`}
       />
-      <DocsLayout currentId={item.id} toc={toc}>
+      <DocsLayout currentId={item.id} toc={DOCS_TOC}>
         <Heading level={1}>{item.title}</Heading>
         <Text tone="neutral" size="lg" className={css({ mt: "16" })}>
           {category
@@ -64,33 +115,33 @@ export default function DocsSlug() {
           들어갑니다. 공통 레이아웃 골격을 검증하기 위한 플레이스홀더입니다.
         </Box>
 
-        <Heading
-          level={2}
-          id="overview"
-          className={css({ mt: "48", mb: "16" })}
-        >
-          개요
-        </Heading>
-        <Text tone="neutral">본문 콘텐츠 영역입니다.</Text>
+        {SECTIONS.map((section) => (
+          <Box key={section.id}>
+            <Heading level={2} id={section.id} className={sectionHeading}>
+              {section.label}
+            </Heading>
+            <Placeholder paragraphs={section.paragraphs} />
 
-        <Heading level={2} id="usage" className={css({ mt: "48", mb: "16" })}>
-          사용법
-        </Heading>
-        <Text tone="neutral">본문 콘텐츠 영역입니다.</Text>
-
-        <Heading level={2} id="props" className={css({ mt: "48", mb: "16" })}>
-          Props
-        </Heading>
-        <Text tone="neutral">본문 콘텐츠 영역입니다.</Text>
-
-        <Heading level={2} id="a11y" className={css({ mt: "48", mb: "16" })}>
-          접근성
-        </Heading>
-        <Text tone="neutral">본문 콘텐츠 영역입니다.</Text>
+            {section.children?.map((child) => (
+              <Box key={child.id}>
+                <Heading level={3} id={child.id} className={subHeading}>
+                  {child.label}
+                </Heading>
+                <Placeholder paragraphs={child.paragraphs} />
+              </Box>
+            ))}
+          </Box>
+        ))}
       </DocsLayout>
     </>
   );
 }
+
+const sectionHeading = css({ mt: "48", mb: "16" });
+
+const subHeading = css({ mt: "32", mb: "12" });
+
+const paragraph = css({ mb: "16" });
 
 const placeholderNotice = css({
   mt: "24",
