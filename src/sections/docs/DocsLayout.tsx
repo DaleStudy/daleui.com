@@ -8,7 +8,6 @@ import { DocsPagination } from "./DocsPagination";
 import { findCategoryTitle } from "./docsNav";
 import { useActiveTocId } from "../../hooks/useActiveTocId";
 import { useHashFocus } from "../../hooks/useHashFocus";
-import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { getCopyrightYear } from "../../utils/getCopyrightYear";
 
 const GITHUB_REPO_URL = "https://github.com/DaleStudy/daleui.com";
@@ -39,11 +38,10 @@ export function DocsLayout({
   const [pinnedTocId, setPinnedTocId] = useState<string>();
   const closeDrawer = () => setIsDrawerOpen(false);
   const styles = docsLayout();
-  const isTocVisible = useMediaQuery(TOC_MEDIA_QUERY);
   const scrolledTocId = useActiveTocId(
     toc.map((item) => item.id),
     HEADING_OFFSET,
-    isTocVisible && activeTocId === undefined,
+    activeTocId === undefined,
   );
   // 부드럽게 이동하는 동안에는 중간 섹션을 훑지 않고 목적지를 활성으로 둡니다.
   const currentTocId = activeTocId ?? pinnedTocId ?? scrolledTocId;
@@ -149,8 +147,6 @@ const SIDEBAR_WIDTH = "288px";
 const TOC_WIDTH = "240px";
 const HEADER_OFFSET = "64px";
 const HEADING_OFFSET = 96;
-/** 목차는 `xl` 이상에서만 노출되므로(`docsLayout.toc`) 스크롤 구독도 같은 조건으로 제한합니다. */
-const TOC_MEDIA_QUERY = "(min-width: 1280px)";
 
 const docsLayout = sva({
   slots: [
