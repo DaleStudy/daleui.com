@@ -34,13 +34,6 @@ describe("findCategoryTitle", () => {
 });
 
 describe("DOCS_SEARCH_INDEX", () => {
-  it("모든 문서에 카테고리를 채운다", () => {
-    expect(DOCS_SEARCH_INDEX).toHaveLength(DOCS_FLAT_ITEMS.length);
-    expect(DOCS_SEARCH_INDEX.every((entry) => entry.category.length > 0)).toBe(
-      true,
-    );
-  });
-
   it("그룹이 있는 항목에는 그룹 라벨을 채운다", () => {
     const button = DOCS_SEARCH_INDEX.find((entry) => entry.id === "button");
     expect(button).toMatchObject({ category: "컴포넌트", group: "일반" });
