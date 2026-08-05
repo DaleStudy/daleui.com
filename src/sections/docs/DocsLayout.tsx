@@ -1,6 +1,6 @@
 import { Box, Icon, Link } from "daleui";
 import { useEffect, useState } from "react";
-import { sva } from "../../../styled-system/css";
+import { css, sva } from "../../../styled-system/css";
 import { DocsHeader } from "./DocsHeader";
 import { DocsSidebar } from "./DocsSidebar";
 import { DocsToc, type TocItem } from "./DocsToc";
@@ -62,7 +62,11 @@ export function DocsLayout({
       }
     };
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    document.body.classList.add(...SCROLL_LOCK_CLASSES);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.classList.remove(...SCROLL_LOCK_CLASSES);
+    };
   }, [isDrawerOpen]);
 
   return (
@@ -147,6 +151,11 @@ const SIDEBAR_WIDTH = "288px";
 const TOC_WIDTH = "240px";
 const HEADER_OFFSET = "64px";
 const HEADING_OFFSET = 96;
+
+/** 드로어가 열려 있는 동안 배경 스크롤을 막습니다. 드로어가 없는 `lg` 이상에서는 잠그지 않습니다. */
+const SCROLL_LOCK_CLASSES = css({
+  overflow: { base: "hidden", lg: "visible" },
+}).split(" ");
 
 const docsLayout = sva({
   slots: [
