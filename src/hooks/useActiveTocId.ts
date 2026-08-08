@@ -104,14 +104,12 @@ function createActiveIdStore(ids: string[], offset: number) {
  * @param ids 목차가 가리키는 heading id 목록
  * @param offset 활성 판정 기준선. heading의 scroll-margin-top과 같은 값을 넘겨야
  * 목차 링크로 이동한 직후 활성 항목이 어긋나지 않습니다.
- * @param enabled false면 스크롤을 구독하지 않고 undefined를 반환합니다.
  */
 export function useActiveTocId(
   ids: string[],
   offset: number,
-  enabled = true,
 ): string | undefined {
-  const idsKey = enabled ? ids.join(ID_SEPARATOR) : "";
+  const idsKey = ids.join(ID_SEPARATOR);
 
   const store = useMemo(
     () => createActiveIdStore(idsKey ? idsKey.split(ID_SEPARATOR) : [], offset),

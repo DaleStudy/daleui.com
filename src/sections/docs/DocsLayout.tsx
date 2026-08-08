@@ -17,8 +17,6 @@ interface DocsLayoutProps {
   currentId: string;
   /** 우측 목차 항목 */
   toc?: TocItem[];
-  /** 활성 목차 항목 id를 직접 지정합니다. 생략하면 스크롤 위치로 판정합니다. */
-  activeTocId?: string;
   /**
    * GitHub 편집 링크가 가리킬 경로.
    * 지정하지 않으면 저장소 루트로 연결합니다.
@@ -30,7 +28,6 @@ interface DocsLayoutProps {
 export function DocsLayout({
   currentId,
   toc = [],
-  activeTocId,
   editPath,
   children,
 }: DocsLayoutProps) {
@@ -41,10 +38,9 @@ export function DocsLayout({
   const scrolledTocId = useActiveTocId(
     toc.map((item) => item.id),
     HEADING_OFFSET,
-    activeTocId === undefined,
   );
   // 부드럽게 이동하는 동안에는 중간 섹션을 훑지 않고 목적지를 활성으로 둡니다.
-  const currentTocId = activeTocId ?? pinnedTocId ?? scrolledTocId;
+  const currentTocId = pinnedTocId ?? scrolledTocId;
   useHashFocus();
 
   const category = findCategoryTitle(currentId);

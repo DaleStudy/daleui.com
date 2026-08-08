@@ -152,18 +152,6 @@ describe("useActiveTocId", () => {
     expect(result.current).toBe("overview");
   });
 
-  it("enabled가 false면 구독하지 않고 활성 항목도 없다", async () => {
-    renderHeadings({ overview: 300, usage: 900, props: 1500 });
-    setViewport({ scrollY: 0 });
-    const add = vi.spyOn(window, "addEventListener");
-
-    const { result } = renderHook(() => useActiveTocId(IDS, OFFSET, false));
-    await flushFrame();
-
-    expect(result.current).toBeUndefined();
-    expect(add.mock.calls.map(([type]) => type)).not.toContain("scroll");
-  });
-
   it("스크롤하면 활성 항목이 갱신된다", async () => {
     const tops: Record<string, number> = {
       overview: 300,
