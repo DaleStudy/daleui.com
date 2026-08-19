@@ -1,0 +1,75 @@
+타이포그래피 토큰은 두 단계로 나뉩니다. 폰트·사이즈·굵기·행간·자간은 낱개 토큰이고, 이들을 조합해 이름을 붙인 것이 텍스트 스타일(textStyle)입니다. 화면에서는 낱개 토큰을 하나씩 고르는 대신 텍스트 스타일을 쓰면 조합이 어긋나지 않습니다.
+
+## 폰트
+
+한글과 라틴 문자를 함께 다루기 위해 본문에는 Pretendard, 코드에는 JetBrains Mono를 사용합니다.
+
+<FontTable />
+
+## 사이즈
+
+16px(1rem)를 기준으로 한 아홉 단계입니다. rem으로 정의해 사용자의 브라우저 글자 크기 설정을 따릅니다.
+
+<FontSizeTable />
+
+## 굵기
+
+네 단계를 제공합니다. Pretendard Variable을 사용하므로 단계 사이 값도 표현되지만, 일관성을 위해 토큰 범위 안에서 선택하세요.
+
+<FontWeightTable />
+
+## 행간과 자간
+
+행간은 두 단계입니다. 여러 줄로 흐르는 본문에는 balanced, 한 줄로 끝나는 제목·라벨에는 tight를 사용합니다.
+
+<LineHeightTable />
+
+<LetterSpacingTable />
+
+자간은 `tight`와 `balanced` 두 값이 있지만 둘 다 단위가 없어 CSS `letter-spacing`에서는 무시됩니다. 자간을 실제로 좁히려면 토큰 값에 `em` 같은 단위가 필요합니다.
+
+## 텍스트 스타일
+
+낱개 토큰을 조합해 이름을 붙인 스타일입니다. Panda의 textStyle 속성으로 한 번에 적용합니다. 미리보기는 기준(base) 크기로 렌더링합니다.
+
+### display · 디스플레이
+
+랜딩 페이지의 첫 화면처럼 시선을 붙잡아야 하는 자리에 씁니다. 참조하는 `7xl`·`8xl`은 달레UI가 아닌 Panda 기본 프리셋 값입니다.
+
+<TextStyleSamples group="display" />
+
+### title · 타이틀
+
+섹션을 여는 제목입니다. 문서 구조는 heading으로 표현하세요.
+
+<TextStyleSamples group="title" />
+
+### body · 본문
+
+읽는 글에 사용합니다. 행간이 1.5로 넉넉합니다.
+
+<TextStyleSamples group="body" />
+
+### label · 라벨
+
+버튼·입력 라벨처럼 짧은 문구에 사용합니다. underline·strong 변형이 있습니다.
+
+<TextStyleSamples group="label" />
+
+### caption · 캡션
+
+보조 설명이나 표의 단위 표기에 사용합니다.
+
+<TextStyleSamples group="caption" />
+
+### code · 코드
+
+고정폭 서체로 코드와 토큰 이름을 표시합니다.
+
+<TextStyleSamples group="code" />
+
+### heading · 제목
+
+Heading 컴포넌트가 사용하는 스타일로, 뷰포트에 따라 커집니다.
+
+<TextStyleSamples group="heading" />
