@@ -1,9 +1,12 @@
+import { MDXProvider } from "@mdx-js/react";
 import { Box, Heading, Text } from "daleui";
 import { useNavigate, useParams } from "react-router";
 import { css } from "../../styled-system/css";
+import { findDocsContent } from "../content/docs/loader";
 import { DocsLayout } from "../sections/docs/DocsLayout";
 import type { TocItem } from "../sections/docs/DocsToc";
 import { DOCS_FLAT_ITEMS, findCategoryTitle } from "../sections/docs/docsNav";
+import { docsComponents } from "../sections/docs/foundations";
 
 interface PlaceholderSection {
   id: string;
@@ -94,6 +97,7 @@ export default function DocsSlug() {
   }
 
   const category = findCategoryTitle(item.id);
+  const content = findDocsContent(item.id);
 
   return (
     <>
@@ -102,36 +106,53 @@ export default function DocsSlug() {
         name="description"
         content={`${item.title} 문서 - 달레UI 디자인 시스템`}
       />
-      <DocsLayout currentId={item.id} toc={DOCS_TOC}>
-        <Heading level={1}>{item.title}</Heading>
-        <Text tone="neutral" size="lg" className={css({ mt: "16" })}>
-          {category
-            ? `${category} 카테고리의 ${item.title} 문서입니다.`
-            : `${item.title} 문서입니다.`}
-        </Text>
+      <DocsLayout
+        currentId={item.id}
+        toc={content?.toc ?? DOCS_TOC}
+        editPath={content && `src/content/docs/${item.id}.mdx`}
+      >
+        {content ? (
+          <Box className="prose">
+            <Heading level={1}>{item.title}</Heading>
+            <MDXProvider components={docsComponents}>
+              <content.default />
+            </MDXProvider>
+          </Box>
+        ) : (
+          <>
+            <Heading level={1}>{item.title}</Heading>
 
-        <Box className={placeholderNotice}>
-          이 영역에는 문서 본문(Props 표 · 라이브 데모 · 사용 가이드 · 접근성)이
-          들어갑니다. 공통 레이아웃 골격을 검증하기 위한 플레이스홀더입니다.
-        </Box>
+            <Text tone="neutral" size="lg" className={css({ mt: "16" })}>
+              {category
+                ? `${category} 카테고리의 ${item.title} 문서입니다.`
+                : `${item.title} 문서입니다.`}
+            </Text>
 
-        {SECTIONS.map((section) => (
-          <Box key={section.id}>
-            <Heading level={2} id={section.id} className={sectionHeading}>
-              {section.label}
-            </Heading>
-            <Placeholder paragraphs={section.paragraphs} />
+            <Box className={placeholderNotice}>
+              이 영역에는 문서 본문(Props 표 · 라이브 데모 · 사용 가이드 ·
+              접근성)이 들어갑니다. 공통 레이아웃 골격을 검증하기 위한
+              플레이스홀더입니다.
+            </Box>
 
-            {section.children?.map((child) => (
-              <Box key={child.id}>
-                <Heading level={3} id={child.id} className={subHeading}>
-                  {child.label}
+            {SECTIONS.map((section) => (
+              <Box key={section.id}>
+                <Heading level={2} id={section.id} className={sectionHeading}>
+                  {section.label}
                 </Heading>
-                <Placeholder paragraphs={child.paragraphs} />
+                <Placeholder paragraphs={section.paragraphs} />
+
+                {section.children?.map((child) => (
+                  <Box key={child.id}>
+                    <Heading level={3} id={child.id} className={subHeading}>
+                      {child.label}
+                    </Heading>
+                    <Placeholder paragraphs={child.paragraphs} />
+                  </Box>
+                ))}
               </Box>
             ))}
-          </Box>
-        ))}
+          </>
+        )}
       </DocsLayout>
     </>
   );
