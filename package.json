@@ -56,6 +56,8 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
+    "estree-util-value-to-estree": "^3.5.0",
+    "github-slugger": "^2.0.0",
     "globals": "^17.7.0",
     "happy-dom": "^20.10.6",
     "open-graph-scraper": "^6.12.0",
