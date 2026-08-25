@@ -20,7 +20,7 @@
     "coverage": "vitest run --coverage",
     "preview": "vite preview",
     "deploy": "bun run build && wrangler deploy",
-    "prepare": "panda codegen && react-router typegen"
+    "prepare": "panda codegen && react-router typegen && lefthook install"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
@@ -60,6 +60,7 @@
     "github-slugger": "^2.0.0",
     "globals": "^17.8.0",
     "happy-dom": "^20.11.15",
+    "lefthook": "^2.1.10",
     "open-graph-scraper": "^6.12.0",
     "p-limit": "^7.3.1",
     "playwright": "^1.61.1",
