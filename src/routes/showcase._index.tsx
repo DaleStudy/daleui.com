@@ -50,7 +50,7 @@ const showcasePage = sva({
   slots: ["main", "header", "tagline", "container", "grid"],
   base: {
     main: { flex: 1 },
-    header: { py: "64", bgColor: "bg.brand", gap: "16" },
+    header: { py: "64px", bgColor: "bg.brand", gap: "16" },
     tagline: {
       textStyle: "body.lg",
       fontWeight: "semibold",

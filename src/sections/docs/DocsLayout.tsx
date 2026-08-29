@@ -188,7 +188,7 @@ const docsLayout = sva({
       overflowY: "auto",
       px: "16",
       pt: "20",
-      pb: "64",
+      pb: "64px",
       borderRightWidth: "1px",
       borderRightStyle: "solid",
       borderColor: "border.neutral",
@@ -214,7 +214,7 @@ const docsLayout = sva({
       overflowY: "auto",
       px: "16",
       pt: "20",
-      pb: "64",
+      pb: "64px",
       boxShadow: "lg",
     },
     drawerHeader: {
@@ -248,7 +248,7 @@ const docsLayout = sva({
       mb: "8",
     },
     footer: {
-      mt: "64",
+      mt: "64px",
       pt: "24",
       borderTopWidth: "1px",
       borderTopStyle: "solid",

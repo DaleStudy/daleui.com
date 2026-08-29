@@ -35,7 +35,7 @@ export default function BlogIndex({ loaderData }: Route.ComponentProps) {
       >
         <VStack
           as="header"
-          className={css({ py: "64", bgColor: "bg.brand", gap: "16" })}
+          className={css({ py: "64px", bgColor: "bg.brand", gap: "16" })}
         >
           <Heading level={1}>Dale UI 블로그</Heading>
           <p
