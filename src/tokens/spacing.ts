@@ -16,8 +16,6 @@ export const spacing = {
   "36": { value: "2.25rem" },
   "40": { value: "2.5rem" },
   "48": { value: "3rem" },
-  "56": { value: "3.5rem" },
-  "64": { value: "4rem" },
 } satisfies Tokens["spacing"];
 
 export type Spacing = keyof typeof spacing;
