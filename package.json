@@ -59,7 +59,7 @@
     "estree-util-value-to-estree": "^3.5.0",
     "github-slugger": "^2.0.0",
     "globals": "^17.8.0",
-    "happy-dom": "^20.11.6",
+    "happy-dom": "^20.11.15",
     "open-graph-scraper": "^6.12.0",
     "p-limit": "^7.3.1",
     "playwright": "^1.61.1",
