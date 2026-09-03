@@ -1,0 +1,62 @@
+달레UI는 컴파일된 CSS와 React 컴포넌트를 함께 배포합니다. React 19 이상과 CSS import를 처리하는 번들러만 있으면 됩니다.
+
+## 설치
+
+`pretendard`와 `@fontsource-variable/jetbrains-mono`는 `daleui/styles.css`가 직접 불러오는 폰트이므로 함께 설치합니다.
+
+<CodeTabs>
+  <CodeTab label="npm">
+
+```sh frame="none"
+npm install daleui pretendard @fontsource-variable/jetbrains-mono
+```
+
+  </CodeTab>
+  <CodeTab label="pnpm">
+
+```sh frame="none"
+pnpm add daleui pretendard @fontsource-variable/jetbrains-mono
+```
+
+  </CodeTab>
+  <CodeTab label="bun">
+
+```sh frame="none"
+bun add daleui pretendard @fontsource-variable/jetbrains-mono
+```
+
+  </CodeTab>
+</CodeTabs>
+
+## 스타일 불러오기
+
+앱 진입점에서 스타일시트를 한 번만 불러옵니다. 이 파일 하나에 리셋·토큰·컴포넌트 스타일이 모두 들어 있습니다. Next.js App Router에서는 루트 레이아웃(`app/layout.tsx`)에서 불러옵니다.
+
+```tsx title="src/main.tsx"
+import "daleui/styles.css";
+```
+
+## Panda CSS와 함께 쓰기
+
+토큰과 컴포넌트 스타일은 `daleui/styles.css`에 이미 컴파일되어 있어 [Panda CSS](https://panda-css.com)를 설치할 필요가 없습니다. 프로젝트에서 Panda로 직접 스타일을 쓴다면, 달레UI가 preset을 배포하지 않으므로(v1.2.0 기준) 내보낸 CSS 변수를 자기 토큰 값으로 연결합니다.
+
+```ts title="panda.config.ts"
+import { defineConfig } from "@pandacss/dev";
+
+export default defineConfig({
+  preflight: false, // 리셋은 daleui/styles.css에 들어 있습니다
+  prefix: "app", // 없으면 --colors-* 이름이 겹쳐 순환 참조가 됩니다
+  theme: {
+    extend: {
+      semanticTokens: {
+        colors: {
+          surface: { value: "var(--colors-bg-neutral)" },
+          accent: { value: "var(--colors-bg-solid-brand)" },
+        },
+      },
+    },
+  },
+});
+```
+
+변수 이름은 [시맨틱 토큰](/docs/colors) 이름의 점을 하이픈으로 바꾼 형태입니다. `bg.brand.hover`는 `--colors-bg-brand-hover`가 되고, `--spacing-16`·`--radii-md`처럼 다른 토큰도 같은 규칙을 따릅니다.
