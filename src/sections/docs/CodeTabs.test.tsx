@@ -20,6 +20,12 @@ describe("CodeTabs", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
+  it("CodeTab은 자식을 그대로 렌더링한다", () => {
+    render(<CodeTab label="npm">npm install daleui</CodeTab>);
+
+    expect(screen.getByText("npm install daleui")).toBeInTheDocument();
+  });
+
   it("첫 번째 탭의 내용만 보여 준다", () => {
     renderTabs();
 
@@ -59,6 +65,17 @@ describe("CodeTabs", () => {
 
     expect(screen.getByRole("tab", { selected: true })).toHaveTextContent(
       "bun",
+    );
+  });
+
+  it("다루지 않는 키는 선택을 바꾸지 않는다", async () => {
+    renderTabs();
+
+    await userEvent.tab();
+    await userEvent.keyboard("{ArrowDown}");
+
+    expect(screen.getByRole("tab", { selected: true })).toHaveTextContent(
+      "npm",
     );
   });
 
