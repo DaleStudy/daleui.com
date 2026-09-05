@@ -1,3 +1,4 @@
+import { CodeTab, CodeTabs } from "../CodeTabs";
 import {
   BorderStyleSample,
   BorderTable,
@@ -21,6 +22,8 @@ export const docsComponents = {
   BorderStyleSample,
   BorderTable,
   BorderWidthTable,
+  CodeTab,
+  CodeTabs,
   FontSizeTable,
   FontTable,
   FontWeightTable,
