@@ -1,0 +1,55 @@
+컴포넌트와 디자인 토큰을 조합해 화면 하나를 만들어 봅니다. 아래 코드를 그대로 붙여 넣으면 동작합니다. 아직 패키지를 설치하지 않았다면 [설치](/docs/install) 문서를 먼저 보세요.
+
+## 첫 화면
+
+```tsx title="src/App.tsx"
+import { Box, Button, Heading, Text, TextInput, VStack } from "daleui";
+
+export default function App() {
+  return (
+    <VStack as="main" align="center" padding="32">
+      <Box width="360px">
+        <VStack align="stretch" gap="24">
+          <VStack align="stretch" gap="8">
+            <Heading level={1} size={2} wordBreak="cjk">
+              달레UI로 만든 첫 화면
+            </Heading>
+            <Text as="p" tone="neutral" muted>
+              컴포넌트와 토큰만으로 여기까지 만들 수 있습니다.
+            </Text>
+          </VStack>
+
+          <VStack align="stretch" gap="16">
+            <TextInput
+              label="이메일"
+              type="email"
+              placeholder="dale@example.com"
+              helperText="새 소식을 한 달에 한 번 보내드립니다."
+              required
+            />
+            <Button tone="brand" fullWidth>
+              구독하기
+            </Button>
+          </VStack>
+        </VStack>
+      </Box>
+    </VStack>
+  );
+}
+```
+
+## 코드 훑어보기
+
+1. **여백** — `VStack`이 자식을 세로로 쌓고 `gap`으로 간격을 냅니다. `gap`·`padding`에 넣는 숫자는 픽셀이 아니라 [스페이싱 토큰](/docs/spacing) 이름이고, 묶음마다 다른 `gap`을 주면 여백의 위계가 생깁니다.
+2. **제목과 본문** — `Heading`의 `level`은 문서 구조(h1–h5), `size`는 보이는 크기라 따로 정할 수 있습니다. `wordBreak="cjk"`는 한글 제목을 어절 단위로 끊습니다.
+3. **폼** — `TextInput`에 `label`을 넘기면 연결된 `<label>`이 함께 렌더링되고, `helperText`는 입력 아래 안내 문구가 됩니다. `errorMessage`를 넘기면 그 자리를 대신 차지합니다.
+4. **색** — `tone`은 팔레트가 아니라 역할 이름입니다. [시맨틱 토큰](/docs/colors)은 라이트·다크 테마의 짝으로 정의되어 있어, `<html>`에 `dark` 클래스가 붙어도 화면을 고칠 필요가 없습니다.
+
+## 다음 단계
+
+- [색상](/docs/colors) — 테마 전환이 깨지지 않는 시맨틱 토큰 고르는 법
+- [타이포그래피](/docs/typography) — 크기·굵기·행간이 한 벌로 묶인 텍스트 스타일
+- [스페이싱](/docs/spacing) — `gap`·`padding`에 넣는 여백 스케일
+- [VStack](/docs/vstack)·[TextInput](/docs/textinput)·[Button](/docs/button) — 예시에서 쓴 컴포넌트의 변형·상태·전체 props
+- [폼 패턴](/docs/form-patterns) — 여러 필드를 묶고 오류를 표시하는 규칙
+- [접근성](/docs/a11y-guide) — 키보드·스크린 리더 대응에서 지켜야 할 것
