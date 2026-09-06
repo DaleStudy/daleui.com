@@ -1,0 +1,82 @@
+달레UI 컴포넌트는 네이티브 요소로 렌더링되어 레이블 연결·키보드 조작·포커스 표시가 기본으로 들어 있습니다. 나머지는 화면을 조합하는 쪽의 몫입니다. 컴포넌트가 어디까지 보장하고 무엇을 직접 채워야 하는지 정리합니다. 일반적인 기준은 [WCAG 2.2](https://www.w3.org/TR/WCAG22/) AA와 [WAI-ARIA APG](https://www.w3.org/WAI/ARIA/apg/)를 따릅니다.
+
+## 컴포넌트가 보장하는 것
+
+### 시맨틱 구조
+
+컴포넌트는 각자의 역할에 맞는 네이티브 요소로 설계되어 있습니다. 버튼은 버튼으로, 링크는 앵커로, 입력은 폼 요소로 노출되므로 역할·키보드 조작·폼 참여가 별도 설정 없이 따라옵니다. 태그가 이미 갖는 역할을 `role`로 다시 적을 필요는 없습니다.
+
+### 폼 상태
+
+| 컴포넌트                                                     | 자동으로 적용되는 속성                                                                                            |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| `TextInput`·`PasswordInput`·`Select`·`Checkbox`·`RadioGroup` | `required` → `aria-required`, `invalid` → `aria-invalid`, `helperText`·`errorMessage` → `aria-describedby` 연결   |
+| `CheckboxGroup`                                              | 그룹 레이블과 도움말을 묶음에 연결, `invalid`는 각 항목으로 전달, `required`는 별표와 스크린 리더용 "(필수)" 안내 |
+| `Label`                                                      | `required`일 때 별표와 스크린 리더용 안내, `htmlFor`·`children`으로 입력 요소와 연결                              |
+| `Icon`                                                       | 장식용으로 쓰일 때 `aria-hidden="true"`                                                                           |
+| `Link`                                                       | `external`일 때 `target="_blank"`와 `rel="noopener noreferrer"`, 안전하지 않은 URL scheme 차단                    |
+| `PasswordInput`의 토글 버튼                                  | `aria-pressed`와 "패스워드 보기"·"패스워드 숨기기" 레이블                                                         |
+| `Tag`의 제거 버튼                                            | `aria-label="제거"`                                                                                               |
+
+`TextInput`·`PasswordInput`·`Select`에 `aria-describedby`를 직접 넘기면 도움말 요소의 id와 합쳐집니다. 필드 밖에 있는 설명을 함께 연결할 때 쓰세요.
+
+### 포커스 링
+
+`:focus-visible`에서만 실선 아웃라인을 그립니다. 마우스로 눌렀을 때는 나타나지 않습니다. 색은 [시맨틱 토큰](/docs/colors)의 `border.brand.focus`, 위험 색조 컴포넌트는 `border.danger`를 쓰고, 두께는 [보더 토큰](/docs/borders)의 `borderWidths`입니다.
+
+직접 만든 요소에도 같은 링을 씁니다. 토큰은 `daleui/styles.css`가 심어 주는 CSS 변수로 그대로 쓸 수 있습니다.
+
+```css
+.custom-control:focus-visible {
+  outline-style: solid;
+  outline-width: var(--border-widths-sm);
+  outline-offset: 3px;
+  outline-color: var(--colors-border-brand-focus);
+}
+```
+
+조상 요소에 `overflow: hidden`이 있으면 오프셋만큼 삐져나온 링이 잘립니다.
+
+### 키보드 정지점
+
+| 컴포넌트        | 정지점                                                    |
+| --------------- | --------------------------------------------------------- |
+| `RadioGroup`    | 그룹 전체가 하나, 방향키로 옮기면 그 항목이 선택됩니다    |
+| `CheckboxGroup` | 항목마다 하나                                             |
+| `PasswordInput` | 입력과 토글 버튼이 각각 하나                              |
+| `Select`        | `select`와 지우기 버튼이 각각 하나                        |
+| `Tag`           | `onRemove`를 주면 제거 버튼이 정지점으로 하나 더 생깁니다 |
+
+## 직접 채워야 하는 것
+
+### 이름 없는 컨트롤
+
+아이콘만 있는 버튼에는 `aria-label`로 이름을 줍니다.
+
+```tsx
+<Button variant="ghost" aria-label="검색">
+  <Icon name="search" />
+</Button>
+```
+
+`Select`의 지우기 버튼은 `clearButtonName`을 넘겨야 나타나고, 그 문자열이 버튼의 이름이 됩니다.
+
+### 아이콘
+
+`Icon`은 기본적으로 `aria-hidden="true"`라 스크린 리더가 건너뜁니다. 버튼이나 문장에 이름이 이미 있다면 그대로 두면 됩니다. 아이콘 자체가 정보를 전달해 홀로 읽혀야 할 때만 `role="img"`과 이름을 지정하세요. `aria-*` 속성을 넘기는 순간 자동으로 붙던 `aria-hidden`은 빠집니다.
+
+```tsx
+<Icon name="circleAlert" tone="danger" role="img" aria-label="오류" />
+```
+
+### 변화 알리기
+
+사용자가 조작하지 않았는데 화면 일부가 바뀌면 스크린 리더 사용자는 알지 못합니다. 컴포넌트가 대신할 수 없는 부분이라 라이브 리전을 직접 둡니다. 컨테이너는 항상 렌더링해 두고 안의 텍스트만 바꿔야 읽히며, 조건부로 컨테이너째 추가하면 놓칠 수 있습니다.
+
+```tsx
+<div role="status">
+  {results.length > 0 ? `검색 결과 ${results.length}건` : ""}
+</div>
+```
+
+당장 알려야 하는 오류에는 `role="alert"`을 씁니다. 하던 말을 끊고 즉시 읽으므로 저장 완료나 결과 개수 같은 안내에는 쓰지 않습니다.
