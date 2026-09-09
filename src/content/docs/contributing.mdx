@@ -1,0 +1,32 @@
+달레UI는 커뮤니티가 함께 만드는 오픈소스 디자인 시스템입니다. 컴포넌트 하나, 문서의 오타 하나까지 모두 반갑습니다. 다만 소스가 저장소 두 곳에 나뉘어 있어서, 첫 걸음은 **어디에 PR을 올릴지 고르는 일**입니다.
+
+## 저장소 두 곳
+
+| 저장소                                                          | 담고 있는 것                                                |
+| --------------------------------------------------------------- | ----------------------------------------------------------- |
+| [DaleStudy/daleui](https://github.com/DaleStudy/daleui)         | React 컴포넌트, 디자인 토큰, Storybook, npm `daleui` 패키지 |
+| [DaleStudy/daleui.com](https://github.com/DaleStudy/daleui.com) | 이 웹사이트 — 문서 본문, 랜딩 페이지, 쇼케이스              |
+
+이 사이트는 `daleui`를 npm에서 받아 쓰는 쪽입니다. 그래서 고치려는 것이 **컴포넌트의 동작이나 스타일**이면 `daleui`로, **설명하는 문장이나 사이트 자체**면 `daleui.com`으로 PR을 보냅니다.
+
+`/docs/button` 페이지를 예로 들면, 그 페이지에 적힌 설명과 예제 코드는 `daleui.com`에 있고 `Button`이 실제로 받는 Props는 `daleui`에 있습니다. 버튼의 기본 여백을 고치는 일과 그 여백을 설명하는 문장을 고치는 일은 서로 다른 저장소의 PR입니다.
+
+## daleui에 기여하기
+
+포크한 뒤 `main`에서 브랜치를 만들고, 테스트를 함께 작성해 원본 저장소로 PR을 보냅니다. 디자인이 바뀌는 PR에는 `ui` 라벨을 붙여 Chromatic의 UI Review와 UI Tests를 거칩니다.
+
+- [기여 가이드](https://github.com/DaleStudy/daleui/blob/main/CONTRIBUTING.md)
+- [Contributing 위키](https://github.com/DaleStudy/daleui/wiki/Contributing) — 로컬 환경 설정, 이슈 관리, 제안 절차, 품질 검사
+- [Conventions 위키](https://github.com/DaleStudy/daleui/wiki/Conventions) — 코드 스타일, 네이밍, PR 작성 규칙
+
+## daleui.com에 기여하기
+
+문서 본문은 `src/content/docs/<id>.mdx` 한 파일이고, 사이드바는 `src/sections/docs/docsNav.ts`에 정의되어 있습니다. 문서를 새로 추가할 때는 두 곳을 함께 수정합니다.
+
+- [기여 가이드](https://github.com/DaleStudy/daleui.com/blob/main/CONTRIBUTING.md) — 개발 환경, 디렉터리 구조, 문서 페이지 추가 방법, 검증 명령어
+
+브랜치·커밋·PR 컨벤션은 `daleui`와 같으니 위 Conventions 문서를 그대로 따르면 됩니다.
+
+## 함께 이야기하기
+
+기여 방향이 맞는지 미리 확인하고 싶을 때는 이슈에 코멘트를 남기거나 [디스코드](https://dales.link/discord)에서 물어봐 주세요.
