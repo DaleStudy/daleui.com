@@ -23,7 +23,7 @@
     "prepare": "panda codegen && react-router typegen && lefthook install"
   },
   "dependencies": {
-    "@fontsource-variable/jetbrains-mono": "^5.2.8",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@giscus/react": "^3.1.0",
     "@mdx-js/react": "^3.1.1",
     "@react-router/node": "^8.3.0",
