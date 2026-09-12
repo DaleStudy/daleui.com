@@ -59,4 +59,4 @@ export default defineConfig({
 });
 ```
 
-변수 이름은 [시맨틱 토큰](/docs/colors) 이름의 점을 하이픈으로 바꾼 형태입니다. `bg.brand.hover`는 `--colors-bg-brand-hover`가 되고, `--spacing-16`·`--radii-md`처럼 다른 토큰도 같은 규칙을 따릅니다.
+변수 이름은 [시맨틱 토큰](/docs/colors) 이름 전체를 kebab-case로 바꾼 형태입니다. 점은 하이픈이 되고 camelCase도 단어 사이가 하이픈으로 끊기므로, `bg.brand.hover`는 `--colors-bg-brand-hover`, `bgSolid.brand`는 `--colors-bg-solid-brand`, `appBg`는 `--colors-app-bg`가 됩니다. `--spacing-16`·`--radii-md`처럼 다른 토큰도 같은 규칙을 따릅니다.
