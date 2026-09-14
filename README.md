@@ -44,3 +44,7 @@ bun run coverage    # Vitest + coverage
 ```
 
 PR이 열리면 `Integration 🔀` 워크플로우가 위 검증을 실행합니다. `main` 브랜치에 머지되면 `Deployment 🚢` 워크플로우가 GitHub Pages로 배포합니다.
+
+## 기여 (Contributing)
+
+기여 방법과 컨벤션은 [CONTRIBUTING.md](./CONTRIBUTING.md)에 정리해 두었습니다. 저장소 선택 기준은 사이트의 [기여하기](https://www.daleui.com/docs/contributing) 문서에서도 볼 수 있습니다.
