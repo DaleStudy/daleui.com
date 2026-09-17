@@ -1,0 +1,241 @@
+폼은 [TextInput](/docs/textinput)·[Select](/docs/select)·[Checkbox](/docs/checkbox) 같은 컴포넌트를 여러 개 이어 붙여 만들지만, 레이블·도움말·오류는 컴포넌트 하나가 아니라 폼 전체의 규칙입니다. 달레UI 폼 컴포넌트가 공통으로 갖는 구조와, 그 위에 직접 얹어야 하는 검증·오류 노출 규칙을 정리합니다.
+
+## 필드 한 벌
+
+폼 컴포넌트는 모두 `FieldProps`를 공유합니다. 레이블·입력·하단 메시지가 한 벌로 묶여 있어서, 필드마다 `<label>`과 안내 문구를 직접 배치하지 않습니다.
+
+| 슬롯        | 채우는 prop                                    | 하는 일                                                         |
+| ----------- | ---------------------------------------------- | --------------------------------------------------------------- |
+| 레이블      | `label`                                        | 연결된 `<label>`을 렌더링하고 클릭하면 입력으로 포커스가 갑니다 |
+| 필수 표기   | `required`                                     | 레이블에 별표와 스크린 리더용 안내, 입력에 `aria-required`      |
+| 입력        | 컴포넌트별 `value`·`onChange`·`placeholder` 등 | 실제 컨트롤                                                     |
+| 하단 메시지 | `helperText` · `errorMessage`                  | 한 줄짜리 설명 영역, `aria-describedby`로 입력에 연결됩니다     |
+| 오류 상태   | `invalid`                                      | 테두리·포커스 링·메시지를 위험 색조로 바꿉니다                  |
+
+```tsx
+<TextInput
+  label="이메일"
+  type="email"
+  placeholder="dale@example.com"
+  helperText="로그인할 때 쓰는 주소를 적어주세요."
+  required
+/>
+```
+
+[Label](/docs/label)을 직접 쓰는 건 이 구조를 벗어날 때뿐입니다. 레이블을 입력 위가 아닌 곳에 두거나, 한 레이블이 여러 컨트롤을 덮거나, 폼 컴포넌트가 아닌 요소에 이름을 붙이는 경우입니다. `label` prop과 `Label`을 같이 쓰면 레이블이 두 개가 됩니다.
+
+### 레이블
+
+모든 필드에 레이블을 답니다. 플레이스홀더는 입력을 시작하면 사라지므로 레이블을 대신할 수 없고, 화면이 좁다는 이유로 빼면 스크린 리더에서 이름 없는 컨트롤이 됩니다. 검색창처럼 레이블을 시각적으로 감춰야 한다면 `TextInput`·`PasswordInput`·`Select`에 `label` 대신 `aria-label`을 넘깁니다.
+
+문구는 입력할 내용을 가리키는 짧은 명사구로 씁니다. "이메일"이면 충분하고 "이메일을 입력해주세요"는 레이블이 아니라 지시문입니다. 조건이나 형식 설명은 `helperText`로 내립니다.
+
+### 필수 표기
+
+`required`는 레이블에 별표를 붙이고 `aria-required`를 넣습니다. 별표 하나로는 뜻이 전달되지 않으므로 폼 첫머리에 "\* 표시는 필수 항목입니다" 같은 안내를 한 번 둡니다.
+
+`required`는 표시와 접근성 속성만 담당하고 네이티브 `required` 속성은 붙이지 않습니다. 브라우저 기본 검증 풍선이 뜨지 않으므로, 빈 값 검사는 아래 [유효성 검사](#유효성-검사)처럼 직접 해야 합니다.
+
+대부분의 필드가 필수인 폼이라면 별표가 거의 모든 줄에 붙어 구분이 사라집니다. 이럴 때는 필수를 표시하는 대신 선택 항목의 레이블에 "(선택)"을 붙이는 편이 읽힙니다.
+
+### 도움말 텍스트
+
+`helperText`는 입력하기 **전에** 알아야 하는 내용을 적는 자리입니다. 형식·범위·용도처럼 미리 알면 오류를 피할 수 있는 것들입니다.
+
+```tsx
+<TextInput
+  label="비밀번호"
+  helperText="8자 이상, 숫자와 특수문자를 포함합니다."
+/>
+```
+
+입력한 뒤에야 알 수 있는 내용은 도움말이 아니라 오류입니다. "8자 이상"은 도움말, "6자입니다"는 오류입니다.
+
+## 에러 메시지
+
+### 위치
+
+오류 메시지는 `helperText`와 같은 자리를 씁니다. `invalid`가 `true`이고 `errorMessage`가 있으면 그 문구가 도움말을 **대체**합니다. 둘 중 하나만 주면 바뀌지 않습니다 — `errorMessage`만 넘기면 색과 테두리가 그대로고, `invalid`만 켜면 도움말이 남습니다.
+
+```tsx
+<TextInput
+  label="이메일"
+  helperText="로그인할 때 쓰는 주소를 적어주세요."
+  invalid={!!error}
+  errorMessage={error}
+/>
+```
+
+도움말이 오류로 덮인다는 뜻이기도 합니다. 오류 상황에서도 계속 보여야 하는 규칙이라면 오류 문구 안에 그 규칙을 다시 담습니다.
+
+### 문구
+
+무엇이 잘못됐는지와 어떻게 고치는지를 한 문장에 담습니다. 사용자를 탓하거나("잘못 입력하셨습니다") 시스템 사정을 말하지("유효성 검증 실패") 않습니다.
+
+| 이렇게 쓰지 않습니다 | 이렇게 씁니다                     |
+| -------------------- | --------------------------------- |
+| 필수 항목입니다      | 이메일을 입력해주세요             |
+| 형식이 올바르지 않음 | 이메일에 @가 빠졌습니다           |
+| 입력값 오류          | 비밀번호는 8자 이상이어야 합니다  |
+| ERR_INVALID_DATE     | 종료일은 시작일보다 뒤여야 합니다 |
+
+### 노출 시점
+
+입력하는 도중에 오류를 띄우면 첫 글자부터 빨간 줄이 뜹니다. 필드가 아직 오류를 낸 적 없다면 **포커스가 떠날 때**(`onBlur`) 또는 **제출할 때** 처음 검사하고, 한 번 오류가 난 뒤에는 입력할 때마다 다시 검사해 고치는 즉시 메시지를 치웁니다.
+
+```tsx
+const [touched, setTouched] = useState(false);
+const error = validateEmail(email);
+
+<TextInput
+  label="이메일"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+  onBlur={() => setTouched(true)}
+  invalid={touched && !!error}
+  errorMessage={error}
+/>;
+```
+
+제출에서 걸린 경우에는 모든 필드를 한꺼번에 오류 상태로 바꾸고, 첫 오류 필드로 포커스를 옮깁니다. 화면 위쪽이 잘려 보이지 않는 오류를 놓치지 않게 하려면 [라이브 리전](/docs/a11y-guide#변화-알리기)으로 요약을 함께 알립니다.
+
+## 유효성 검사
+
+### 상태 전환
+
+| 상태      | 지정하는 방법              | 유의할 점                               |
+| --------- | -------------------------- | --------------------------------------- |
+| 기본      | —                          | `helperText`가 보입니다                 |
+| 포커스    | 자동                       | 포커스 링은 컴포넌트가 그립니다         |
+| 오류      | `invalid` + `errorMessage` | 둘 다 넘겨야 문구까지 바뀝니다          |
+| 비활성    | `disabled`                 | 포커스를 받지 않고 폼 전송에서 빠집니다 |
+| 읽기 전용 | `readOnly`                 | 포커스·복사는 되고 값은 전송됩니다      |
+
+값을 보여주되 고치지 못하게 할 때 `disabled`와 `readOnly` 중 무엇을 쓸지는 **그 값을 서버로 보내야 하는지**로 가릅니다. 비활성 필드의 값은 폼 전송에 포함되지 않습니다. 둘을 동시에 넘기면 `disabled`가 이기고 개발 모드에서 경고가 찍힙니다.
+
+오류 상태를 끄는 것도 잊지 마세요. 값이 고쳐졌는데 `invalid`가 남아 있으면 제출 버튼을 눌러야 할 이유를 사용자가 찾지 못합니다.
+
+### 검사 위치
+
+검사 함수는 컴포넌트 밖에 두고 필드마다 오류 문구를 돌려주게 합니다. 같은 규칙을 화면과 서버가 나눠 갖게 되므로, 서버가 돌려준 오류도 같은 `errorMessage` 자리에 그대로 넣을 수 있습니다.
+
+```tsx
+function validate(values: SignupValues) {
+  const errors: Partial<Record<keyof SignupValues, string>> = {};
+  if (!values.email) errors.email = "이메일을 입력해주세요";
+  else if (!values.email.includes("@"))
+    errors.email = "이메일에 @가 빠졌습니다";
+  if (values.password.length < 8)
+    errors.password = "비밀번호는 8자 이상이어야 합니다";
+  return errors;
+}
+```
+
+## 폼 하나 만들기
+
+레이블·도움말·오류 규칙을 한 화면에 모으면 이렇게 됩니다.
+
+```tsx title="src/SignupForm.tsx"
+import { Button, PasswordInput, Select, TextInput, VStack } from "daleui";
+import { useRef, useState } from "react";
+
+export function SignupForm() {
+  const [values, setValues] = useState({ email: "", password: "", plan: "" });
+  const [submitted, setSubmitted] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const errors = validate(values);
+  const show = (field: keyof typeof values) => submitted && errors[field];
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setSubmitted(true);
+    if (Object.keys(errors).length > 0) {
+      formRef.current
+        ?.querySelector<HTMLElement>('[aria-invalid="true"]')
+        ?.focus();
+      return;
+    }
+    // 전송
+  }
+
+  return (
+    <form ref={formRef} onSubmit={handleSubmit} noValidate>
+      <VStack align="stretch" gap="16">
+        <div role="alert">
+          {submitted && Object.keys(errors).length > 0
+            ? `입력하지 않았거나 잘못된 항목이 ${Object.keys(errors).length}개 있습니다`
+            : ""}
+        </div>
+
+        <TextInput
+          label="이메일"
+          name="email"
+          type="email"
+          value={values.email}
+          onChange={(e) => setValues({ ...values, email: e.target.value })}
+          helperText="로그인할 때 쓰는 주소를 적어주세요."
+          invalid={!!show("email")}
+          errorMessage={errors.email}
+          required
+        />
+
+        <PasswordInput
+          label="비밀번호"
+          name="password"
+          value={values.password}
+          onChange={(e) => setValues({ ...values, password: e.target.value })}
+          helperText="8자 이상, 숫자와 특수문자를 포함합니다."
+          invalid={!!show("password")}
+          errorMessage={errors.password}
+          required
+        />
+
+        <Select
+          label="요금제"
+          name="plan"
+          value={values.plan}
+          onChange={(e) => setValues({ ...values, plan: e.target.value })}
+          placeholder="선택해주세요"
+          invalid={!!show("plan")}
+          errorMessage={errors.plan}
+          required
+        >
+          <option value="free">무료</option>
+          <option value="pro">프로</option>
+        </Select>
+
+        <Button type="submit" tone="brand" fullWidth>
+          가입하기
+        </Button>
+      </VStack>
+    </form>
+  );
+}
+```
+
+- `noValidate`로 브라우저 기본 검증을 끄고 검사와 문구를 한곳에서 관리합니다.
+- `role="alert"` 컨테이너는 비어 있더라도 항상 렌더링해 둬야 내용이 바뀔 때 읽힙니다.
+- 첫 오류 필드를 찾을 때 `aria-invalid="true"`를 쓰면 컴포넌트 종류를 가리지 않습니다.
+- `VStack`의 `gap`은 [스페이싱 토큰](/docs/spacing) 이름입니다. 필드 사이는 한 단계, 필드 묶음 사이는 그보다 큰 값을 줘서 위계를 만듭니다.
+
+## 선택지 고르기
+
+여러 개 중에 고르는 필드는 개수와 선택 방식으로 컴포넌트를 정합니다.
+
+| 상황                               | 컴포넌트                             |
+| ---------------------------------- | ------------------------------------ |
+| 하나만 고르고 선택지가 5개 이하    | [RadioGroup](/docs/radiogroup)       |
+| 하나만 고르고 선택지가 6개 이상    | [Select](/docs/select)               |
+| 여럿 고르기                        | [CheckboxGroup](/docs/checkboxgroup) |
+| 켜고 끄는 항목 하나 (약관 동의 등) | [Checkbox](/docs/checkbox)           |
+
+`RadioGroup`·`CheckboxGroup`은 `label`이 필수 prop입니다. 이 문자열이 묶음 전체의 이름이 되고, `helperText`·`errorMessage`도 항목 하나가 아니라 묶음에 붙습니다. 항목별로 오류를 낼 수는 없으므로 "하나 이상 선택해주세요"처럼 묶음 단위 문구를 씁니다.
+
+`Select`에서 아직 고르지 않은 상태는 `placeholder`가 맡습니다. 빈 값을 가진 선택 불가 옵션으로 렌더링되므로 `<option value="">선택해주세요</option>`를 따로 넣지 않습니다. 고른 값을 다시 비울 수 있게 하려면 `clearButtonName`에 지우기 버튼의 이름을 넘깁니다.
+
+## 다음 단계
+
+- [접근성](/docs/a11y-guide) — 컴포넌트가 자동으로 붙이는 ARIA 속성과 직접 채워야 하는 것
+- [TextInput](/docs/textinput)·[Select](/docs/select)·[RadioGroup](/docs/radiogroup) — 각 컴포넌트의 전체 props
+- [빠른 시작](/docs/quickstart) — 폼이 들어간 화면 한 장 만들어 보기
