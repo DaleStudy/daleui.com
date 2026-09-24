@@ -37,12 +37,10 @@ const ROOT = join(import.meta.dirname, "..");
 const DOCS_DIR = join(ROOT, "src", "content", "docs");
 const PUBLIC_DIR = join(ROOT, "public");
 const SITE_URL = "https://www.daleui.com";
-const STORYBOOK_URL =
-  "https://main--675790d317ba346348aa3490.chromatic.com";
+const STORYBOOK_URL = "https://main--675790d317ba346348aa3490.chromatic.com";
 const GITHUB_URL = "https://github.com/DaleStudy/daleui";
 const SPONSOR_URL = "https://github.com/sponsors/DaleStudy";
-const FIGMA_URL =
-  "https://www.figma.com/community/file/1559487636467651573";
+const FIGMA_URL = "https://www.figma.com/community/file/1559487636467651573";
 
 const BLURB =
   "한국어 우선 React 디자인 시스템. Panda CSS 시맨틱 토큰과 접근성 높은 컴포넌트를 제공합니다.";
@@ -78,7 +76,8 @@ interface DocPage {
 }
 
 function markdownTable(headers: string[], rows: string[][]): string {
-  const cell = (value: string) => value.replace(/\|/g, "\\|").replace(/\n/g, " ");
+  const cell = (value: string) =>
+    value.replace(/\|/g, "\\|").replace(/\n/g, " ");
   const line = (values: string[]) => `| ${values.map(cell).join(" | ")} |`;
   return [
     line(headers),
@@ -192,7 +191,9 @@ function renderJsx(name: string, attrs: string): string {
         ]),
       );
     case "BorderStyleSample":
-      return ["solid", "dashed", "dotted"].map((style) => `- \`${style}\``).join("\n");
+      return ["solid", "dashed", "dotted"]
+        .map((style) => `- \`${style}\``)
+        .join("\n");
     case "IconGallery":
       return listIconNames(kind ?? "")
         .map((iconName) => `- \`${iconName}\``)
