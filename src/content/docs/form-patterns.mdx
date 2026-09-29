@@ -34,7 +34,7 @@
 
 `required`는 레이블에 별표를 붙이고 `aria-required`를 넣습니다. 별표 하나로는 뜻이 전달되지 않으므로 폼 첫머리에 "\* 표시는 필수 항목입니다" 같은 안내를 한 번 둡니다.
 
-`required`는 표시와 접근성 속성만 담당하고 네이티브 `required` 속성은 붙이지 않습니다. 브라우저 기본 검증 풍선이 뜨지 않으므로, 빈 값 검사는 아래 [유효성 검사](#유효성-검사)처럼 직접 해야 합니다.
+required의 네이티브 속성 적용 여부는 컴포넌트에 따라 다를 수 있습니다. 폼에서는 noValidate를 사용해 브라우저 기본 검증을 비활성화하고, 빈 값 검사는 아래 [유효성 검사](#유효성-검사) 패턴처럼 직접 처리합니다.
 
 대부분의 필드가 필수인 폼에서는 별표만으로는 어떤 항목이 선택인지 한눈에 찾기 어렵습니다. 이럴 때는 필수 항목의 별표와 함께, 선택 항목의 레이블에 "(선택)"을 붙여 두면 알아보기 쉽습니다.
 
@@ -129,6 +129,7 @@ function validate(values: SignupValues) {
     errors.email = "이메일에 @가 빠졌습니다";
   if (values.password.length < 8)
     errors.password = "비밀번호는 8자 이상이어야 합니다";
+  if (!values.plan) errors.plan = "요금제를 선택해주세요";
   return errors;
 }
 ```
@@ -152,9 +153,10 @@ export function SignupForm() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitted(true);
-    if (Object.keys(errors).length > 0) {
+    const firstErrorField = Object.keys(errors)[0];
+    if (firstErrorField) {
       formRef.current
-        ?.querySelector<HTMLElement>('[aria-invalid="true"]')
+        ?.querySelector<HTMLElement>(`[name="${firstErrorField}"]`)
         ?.focus();
       return;
     }
@@ -218,7 +220,7 @@ export function SignupForm() {
 
 - `noValidate`로 브라우저 기본 검증을 끄고 검사와 문구를 한곳에서 관리합니다.
 - `role="alert"` 컨테이너는 비어 있더라도 항상 렌더링해 둬야 내용이 바뀔 때 읽힙니다.
-- 첫 오류 필드를 찾을 때 `aria-invalid="true"`를 쓰면 컴포넌트 종류를 가리지 않습니다.
+- 첫 오류 필드는 유효성 검사 결과에서 확인하고, 해당 필드의 name을 기준으로 포커스를 이동합니다.
 - `VStack`의 `gap`은 [스페이싱 토큰](/docs/spacing) 이름입니다. 필드 사이는 한 단계, 필드 묶음 사이는 그보다 큰 값을 줘서 위계를 만듭니다.
 
 ## 선택지 고르기
