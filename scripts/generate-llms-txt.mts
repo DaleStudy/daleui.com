@@ -204,9 +204,33 @@ function renderJsx(name: string, attrs: string): string {
   }
 }
 
-/** 코드 펜스와 인라인 코드 밖의 JSX 컴포넌트를 마크다운 표로 바꿉니다. */
+/**
+ * CodeTabs/CodeTab 짝 태그를 걷어내고, 탭 label을 소제목으로 남긴다.
+ * (self-closing JSX와 달리 여닫는 형태라 별도 처리.
+ *  탭 안에 코드 펜스가 있으므로 펜스 분할보다 먼저 호출해야 한다.)
+ */
+function expandCodeTabs(markdown: string): string {
+  return markdown.replace(
+    /<CodeTabs>\s*([\s\S]*?)<\/CodeTabs>/g,
+    (_, inner: string) => {
+      const tabs: string[] = [];
+      for (const match of inner.matchAll(
+        /<CodeTab\s+label="([^"]*)"[^>]*>\s*([\s\S]*?)\s*<\/CodeTab>/g,
+      )) {
+        const label = match[1] ?? "";
+        const content = (match[2] ?? "").trim();
+        tabs.push(`### ${label}\n\n${content}`);
+      }
+      return tabs.join("\n\n");
+    },
+  );
+}
+
+/** 코드 펜스와 인라인 코드 밖의 JSX 컴포넌트를 마크다운으로 바꿉니다. */
 function expandComponents(markdown: string): string {
-  const fences = markdown.split(/(```[\s\S]*?```)/g);
+  // CodeTabs는 내부에 ``` 펜스를 포함하므로 펜스 분할 전에 펼친다.
+  const withTabs = expandCodeTabs(markdown);
+  const fences = withTabs.split(/(```[\s\S]*?```)/g);
   return fences
     .map((part) => {
       if (part.startsWith("```")) return part;
