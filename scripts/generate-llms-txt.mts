@@ -293,7 +293,7 @@ function renderDocument(title: string, pages: DocPage[]): string {
   return `${sections.join("\n").trim()}\n`;
 }
 
-function renderIndex(sets: TopicSet[]): string {
+function renderIndex(sets: TopicSet[], pages: DocPage[]): string {
   const setLinks = [
     `- [Complete documentation](${SITE_URL}/llms-full.txt): 사이트에 공개된 문서 전체`,
     ...sets.map(
@@ -301,6 +301,18 @@ function renderIndex(sets: TopicSet[]): string {
         `- [${set.label}](${SITE_URL}/${set.filename}): ${set.description}`,
     ),
   ];
+
+  const docSections: string[] = [];
+  let category = "";
+  for (const page of pages) {
+    if (page.category !== category) {
+      category = page.category;
+      if (docSections.length > 0) docSections.push("");
+      docSections.push(`### ${category}`, "");
+    }
+    const label = page.group ? `${page.group} · ${page.title}` : page.title;
+    docSections.push(`- [${label}](${SITE_URL}/docs/${page.id})`);
+  }
 
   return [
     "# daleui",
@@ -318,6 +330,10 @@ function renderIndex(sets: TopicSet[]): string {
     "## Documentation Sets",
     "",
     ...setLinks,
+    "",
+    "## Docs",
+    "",
+    ...docSections,
     "",
     "## Notes",
     "",
@@ -381,7 +397,7 @@ async function main(): Promise<void> {
   );
 
   await mkdir(PUBLIC_DIR, { recursive: true });
-  await writePublic("llms.txt", renderIndex(publishedSets));
+  await writePublic("llms.txt", renderIndex(publishedSets, pages));
   await writePublic("llms-full.txt", renderDocument("daleui", pages));
 
   for (const set of TOPIC_SETS) {
