@@ -9,7 +9,7 @@ import { SeoMeta } from "../components/SeoMeta";
 
 const title = "블로그 | Dale UI";
 const description =
-  "달레UI 팀이 디자인 시스템을 만들며 쌓은 기록을 공유합니다.";
+  "달레 UI 팀이 디자인 시스템을 만들며 쌓은 기록을 공유합니다.";
 const image = staticOgImageUrl("blog");
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -45,7 +45,7 @@ export default function BlogIndex({ loaderData }: Route.ComponentProps) {
               color: "fg.neutral.disabled",
             })}
           >
-            달레UI 팀이 디자인 시스템을 만들며 쌓은 기록을 공유합니다.
+            달레 UI 팀이 디자인 시스템을 만들며 쌓은 기록을 공유합니다.
           </p>
         </VStack>
 
