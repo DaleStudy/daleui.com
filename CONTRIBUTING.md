@@ -1,6 +1,6 @@
 # 기여 가이드
 
-달레UI에 관심을 가져주셔서 감사합니다. 기여는 언제나 환영합니다! 🎉
+달레 UI에 관심을 가져주셔서 감사합니다. 기여는 언제나 환영합니다! 🎉
 
 이 저장소는 문서 사이트([www.daleui.com](https://www.daleui.com))입니다. 컴포넌트와 디자인 토큰 소스는 [DaleStudy/daleui](https://github.com/DaleStudy/daleui)에 있습니다.
 
@@ -54,6 +54,7 @@ bun run dev
 
 - 사이드바 `title`이 h1으로 렌더링되므로 본문에 제목을 다시 쓰지 않습니다.
 - `##`·`###`가 우측 목차가 되고, heading `id`는 자동으로 붙습니다.
+- 프로젝트 이름은 본체 저장소와 같이 "달레 UI"로 띄어 씁니다.
 - 파운데이션 표·샘플 블록(`SemanticColorTable`, `SpacingTable` 등)은 `import` 없이 바로 쓸 수 있습니다. 목록은 `src/sections/docs/foundations`에 있습니다.
 - 코드 블록은 [Expressive Code](https://expressive-code.com/)로 렌더링되어 `title="src/App.tsx"` 같은 속성을 지원하고, ` ```mermaid ` 블록은 다이어그램으로 그려집니다. 외부 링크는 새 탭으로 열립니다.
 

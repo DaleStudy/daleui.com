@@ -29,7 +29,7 @@ export function Header({ handleScrollToSection }: HeaderProps) {
         <Heading level={1} align="center">
           한국어 환경에 특화된
           <br />
-          모두를 위한 디자인 시스템, 달레UI
+          모두를 위한 디자인 시스템, 달레 UI
         </Heading>
         <p
           className={css({
@@ -38,7 +38,7 @@ export function Header({ handleScrollToSection }: HeaderProps) {
             color: "fg.neutral.placeholder",
           })}
         >
-          달레UI는 한국어 사용자 경험을 최우선으로 고려한 디자인 시스템입니다.
+          달레 UI는 한국어 사용자 경험을 최우선으로 고려한 디자인 시스템입니다.
           <br />
           누구나 쉽고 빠르게 디자인하고 개발할 수 있도록, 구성요소부터 협업
           구조까지 전 과정을 함께 만들어갑니다.

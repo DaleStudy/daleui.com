@@ -22,7 +22,7 @@ export function Testimonials({
         <VStack gap="12" align="center" className={classes.header}>
           <Tag tone="brand">사용자 후기</Tag>
           <Heading level={4} align="center" wordBreak="cjk">
-            달레UI를 사용한 분들의 이야기를 들어보세요.
+            달레 UI를 사용한 분들의 이야기를 들어보세요.
           </Heading>
         </VStack>
 

@@ -104,7 +104,7 @@ export default function DocsSlug() {
       <title>{`${item.title} | Dale UI`}</title>
       <meta
         name="description"
-        content={`${item.title} 문서 - 달레UI 디자인 시스템`}
+        content={`${item.title} 문서 - 달레 UI 디자인 시스템`}
       />
       <DocsLayout
         currentId={item.id}

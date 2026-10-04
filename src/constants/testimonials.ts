@@ -31,7 +31,7 @@ export const testimonials: Testimonial[] = [
     name: "달레",
     affiliation: "엔지니어",
     quote:
-      "달레UI 덕분에 디자인 시스템을 처음부터 만들 필요 없이, 바로 일관된 UI를 구축할 수 있었어요.",
+      "달레 UI 덕분에 디자인 시스템을 처음부터 만들 필요 없이, 바로 일관된 UI를 구축할 수 있었어요.",
     avatar: "https://avatars.githubusercontent.com/u/5466341",
   },
   {
