@@ -12,7 +12,7 @@ import { SeoMeta } from "../components/SeoMeta";
 
 const title = "Dale UI";
 const description =
-  "쉽고 가볍게 사용하는 오픈소스 디자인 시스템. 달레UI로 일관된 사용자 경험을 빠르게 만들어보세요.";
+  "쉽고 가볍게 사용하는 오픈소스 디자인 시스템. 달레 UI로 일관된 사용자 경험을 빠르게 만들어보세요.";
 const image = staticOgImageUrl("home");
 
 export default function Home() {
