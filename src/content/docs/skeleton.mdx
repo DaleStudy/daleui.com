@@ -1,0 +1,11 @@
+Skeleton은 콘텐츠를 불러오는 동안 들어올 자리를 미리 보여 주는 플레이스홀더입니다. 실제 콘텐츠와 비슷한 모양으로 채워 화면이 덜컥 바뀌는 느낌을 줄입니다. 플레이스홀더 자체는 장식으로 취급되어 `aria-hidden`으로 가려지므로, 로딩 중이라는 사실은 콘텐츠를 가진 영역에서 따로 알려야 합니다.
+
+## 기본 사용법
+
+```tsx
+import { Skeleton } from "daleui";
+
+export function Example() {
+  return <Skeleton.Text lines={3} />;
+}
+```

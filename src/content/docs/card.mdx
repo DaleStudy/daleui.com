@@ -1,0 +1,26 @@
+카드 컴포넌트는 정보 전달 또는 특정 페이지나 리소스로 사용자를 이동시키는 것을 주목적으로 합니다.
+
+- 링크가 없는 경우 정보 전달을 목적으로 사용합니다.
+- 링크가 있는 경우에는 카드 전체 영역 또는 특정 CTA 버튼이 하이퍼링크로 동작합니다.<br/>
+  이때 카드는 사용자에게 “여기를 클릭하면 새로운 곳으로 이동한다”는 점을 직관적으로 인지시키는 탐색형 카드입니다.
+
+## 기본 사용법
+
+```tsx
+import { Card } from "daleui";
+
+export function Example() {
+  return (
+    <Card tone="brand" outline>
+      <Card.Icon name="award" />
+      <Card.Body>
+        <Card.Title>디자인 토큰</Card.Title>
+        <Card.Description>
+          색·타이포그래피·여백을 이름으로 쓰는 방법을 정리했습니다.
+        </Card.Description>
+      </Card.Body>
+      <Card.Link href="/docs/colors">색상 문서 보기</Card.Link>
+    </Card>
+  );
+}
+```

@@ -1,0 +1,16 @@
+HStack은 자식을 가로 한 줄로 배치합니다. [Flex](/docs/flex)에서 자주 쓰는 `direction="row"` 패턴을 `justify="left"`·`align="center"` 기본값과 함께 묶어 둔 컴포넌트라, 아이콘과 텍스트를 나란히 놓는 자리에서는 `gap`만 주면 됩니다. 교차축 정렬이 가운데가 아니거나 한 컨테이너에서 방향을 바꿔야 하면 Flex를 씁니다.
+
+## 기본 사용법
+
+```tsx
+import { HStack, Icon, Text } from "daleui";
+
+export function Example() {
+  return (
+    <HStack gap="8">
+      <Icon name="check" tone="success" />
+      <Text>저장했습니다</Text>
+    </HStack>
+  );
+}
+```
