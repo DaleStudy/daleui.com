@@ -1,0 +1,15 @@
+Label은 입력 요소(TextInput, Select, Checkbox 등)에 이름을 부여해 사용자가 해당 필드의 목적을 명확하게 이해하도록 돕는 텍스트 컴포넌트입니다.
+
+## 기본 사용법
+
+```tsx
+import { Label, TextInput } from "daleui";
+
+export function Example() {
+  return (
+    <Label labelText="이메일" required>
+      <TextInput placeholder="dale@example.com" />
+    </Label>
+  );
+}
+```

@@ -1,0 +1,17 @@
+Divider는 복잡하게 흩어져 있는 정보들을 보기 좋게 묶어주고(그룹화), 어떤 내용이 어디서부터 어디까지인지 한눈에 알 수 있도록(시각적 계층 구조) 도와주는 역할을 하는 컴포넌트입니다.
+
+## 기본 사용법
+
+```tsx
+import { Divider, Text, VStack } from "daleui";
+
+export function Example() {
+  return (
+    <VStack align="stretch" gap="16">
+      <Text as="p">결제 정보</Text>
+      <Divider />
+      <Text as="p">배송 정보</Text>
+    </VStack>
+  );
+}
+```

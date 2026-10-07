@@ -1,0 +1,16 @@
+Flex는 CSS Flexbox 레이아웃을 위한 컨테이너입니다. `direction`으로 방향을 고르고 `justify`·`align`으로 정렬하며, `gap`·`padding`에는 [스페이싱 토큰](/docs/spacing) 이름을 넘깁니다. 가로 한 줄·세로 한 열처럼 자주 쓰는 배치는 [HStack](/docs/hstack)·[VStack](/docs/vstack)이 더 짧고, 한 컨테이너에서 방향을 바꿔야 하거나 교차축 정렬이 가운데가 아닐 때 Flex를 씁니다.
+
+## 기본 사용법
+
+```tsx
+import { Flex, Text } from "daleui";
+
+export function Example() {
+  return (
+    <Flex direction="row" justify="between" align="center" gap="16">
+      <Text>왼쪽</Text>
+      <Text>오른쪽</Text>
+    </Flex>
+  );
+}
+```
