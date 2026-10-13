@@ -8,6 +8,7 @@ import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import { remarkDocsToc } from "./remark-docs-toc";
+import { remarkLiveDemo } from "./remark-live-demo";
 import { remarkVideoLink } from "./remark-video-link";
 
 /** 목차와 heading id 생성은 문서 본문에만 적용합니다. 블로그 글은 기존대로 rehype-slug가 맡습니다. */
@@ -26,6 +27,7 @@ export function mdxPlugin() {
         remarkGfm,
         remarkVideoLink,
         [remarkDocsToc, { include: DOCS_CONTENT }],
+        [remarkLiveDemo, { include: DOCS_CONTENT }],
       ],
       rehypePlugins: [
         rehypeSlug,

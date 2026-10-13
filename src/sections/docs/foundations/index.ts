@@ -1,4 +1,6 @@
 import { CodeTab, CodeTabs } from "../CodeTabs";
+import { demoScope } from "../demoScope";
+import { LiveDemo, LiveDemoSlot } from "../LiveDemo";
 import {
   BorderStyleSample,
   BorderTable,
@@ -19,6 +21,7 @@ import {
 
 /** MDX 문서에서 import 없이 바로 쓸 수 있는 블록입니다. */
 export const docsComponents = {
+  ...demoScope,
   BorderStyleSample,
   BorderTable,
   BorderWidthTable,
@@ -30,6 +33,8 @@ export const docsComponents = {
   IconGallery,
   LetterSpacingTable,
   LineHeightTable,
+  LiveDemo,
+  LiveDemoSlot,
   PaletteGrid,
   RadiusTable,
   SemanticColorTable,

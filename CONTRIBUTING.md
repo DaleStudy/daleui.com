@@ -58,6 +58,27 @@ bun run dev
 - 파운데이션 표·샘플 블록(`SemanticColorTable`, `SpacingTable` 등)은 `import` 없이 바로 쓸 수 있습니다. 목록은 `src/sections/docs/foundations`에 있습니다.
 - 코드 블록은 [Expressive Code](https://expressive-code.com/)로 렌더링되어 `title="src/App.tsx"` 같은 속성을 지원하고, ` ```mermaid ` 블록은 다이어그램으로 그려집니다. 외부 링크는 새 탭으로 열립니다.
 
+## 라이브 데모 (`preview`)
+
+코드 펜스의 info 문자열에 `preview`를 붙이면 그 코드가 실제 컴포넌트로 렌더링됩니다. 화면에 보이는 코드와 렌더링 결과가 같은 문자열에서 나오므로 둘이 어긋날 수 없습니다.
+
+````md
+```tsx preview
+<Button type="submit" variant="solid" tone="brand">
+  저장
+</Button>
+```
+````
+
+렌더링 결과는 `CodeTabs`와 같은 `프리뷰`·`코드` 탭으로 나뉩니다. 코드 탭은 평소의 코드 블록과 똑같아서 Expressive Code의 복사 버튼을 그대로 씁니다. 프리뷰는 페이지 테마를 따르므로 다크 모드는 헤더의 테마 토글로, 반응형 동작은 브라우저 창 크기로 확인합니다.
+
+작성 규칙:
+
+- 펜스 안에는 **JSX만** 씁니다. `import` 문이나 설명을 섞으면 빌드가 실패합니다. 임포트를 보여 주려면 일반 코드 블록을 따로 둡니다.
+- 쓸 수 있는 컴포넌트는 `src/sections/docs/demoScope.ts`에 등록된 달레 UI 컴포넌트입니다. 목록에 없는 컴포넌트는 등록부터 해야 합니다.
+- 상태를 들고 있어야 하는 데모(`useState` 등)는 `preview`로 표현할 수 없습니다. 제어가 필요한 예시는 `src/sections/docs`에 컴포넌트를 만들어 `docsComponents`에 등록하고 MDX에서 태그로 씁니다.
+- 코드 블록을 직접 고쳐 가며 결과를 보는 인라인 편집은 지원하지 않습니다. 브라우저용 JSX 컴파일러를 문서 페이지마다 싣게 되어 비용이 크기 때문입니다. 값을 바꿔 보려면 복사해서 로컬 프로젝트에서 실행합니다.
+
 ## 검증 (Verification)
 
 ```sh
