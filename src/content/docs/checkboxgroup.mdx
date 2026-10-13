@@ -1,0 +1,17 @@
+CheckboxGroup은 여러 선택지 중 하나 이상을 고르는 질문을 하나의 그룹으로 묶는 컴포넌트입니다. 선택지가 2~5개로 적고 모든 옵션을 한눈에 보여줘야 할 때 적합합니다. 그룹 레이블과 도움말을 그룹 단위로 관리하므로, 개별 [Checkbox](/docs/checkbox)를 여러 개 늘어놓는 대신 이 컴포넌트를 씁니다.
+
+## 기본 사용법
+
+```tsx
+import { CheckboxGroup } from "daleui";
+
+export function Example() {
+  return (
+    <CheckboxGroup name="fruits" label="좋아하는 과일을 모두 고르세요">
+      <CheckboxGroup.Item value="apple">사과</CheckboxGroup.Item>
+      <CheckboxGroup.Item value="banana">바나나</CheckboxGroup.Item>
+      <CheckboxGroup.Item value="orange">오렌지</CheckboxGroup.Item>
+    </CheckboxGroup>
+  );
+}
+```

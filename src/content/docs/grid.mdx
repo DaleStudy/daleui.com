@@ -1,0 +1,20 @@
+Grid는 CSS Grid 레이아웃을 위한 컨테이너입니다. 행과 열을 함께 정해야 하는 배치에 쓰고, `gridTemplateColumns`·`gridTemplateRows`·`areas`로 격자를 선언합니다. 한 칸이 여러 열이나 행을 차지해야 하면 `GridItem`으로 범위를 지정합니다. 한 방향으로만 늘어서는 배치라면 [Flex](/docs/flex)가 더 간단합니다.
+
+## 기본 사용법
+
+```tsx
+import { Grid, GridItem, Text } from "daleui";
+
+export function Example() {
+  return (
+    <Grid gridTemplateColumns="repeat(3, 1fr)" gap="16">
+      <GridItem gridColumn="span 2">
+        <Text>두 열을 차지하는 칸</Text>
+      </GridItem>
+      <GridItem>
+        <Text>한 열을 차지하는 칸</Text>
+      </GridItem>
+    </Grid>
+  );
+}
+```

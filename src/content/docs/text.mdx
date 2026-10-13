@@ -1,0 +1,15 @@
+Text는 본문 텍스트를 나타내는 컴포넌트입니다. `size`·`weight`는 [타이포그래피 토큰](/docs/typography), `tone`은 [시맨틱 색상 토큰](/docs/colors)을 받고, `as`로 `p`·`span`·`strong` 같은 태그를 골라 의미를 맞춥니다. 제목에는 [Heading](/docs/heading)을 씁니다.
+
+## 기본 사용법
+
+```tsx
+import { Text } from "daleui";
+
+export function Example() {
+  return (
+    <Text as="p" size="md">
+      컴포넌트와 토큰만으로 여기까지 만들 수 있습니다.
+    </Text>
+  );
+}
+```

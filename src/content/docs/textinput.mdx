@@ -1,0 +1,19 @@
+TextInput은 사용자가 이름, 이메일, 검색어 등 텍스트 정보를 직접 입력할 수 있도록 제공되는 입력 컴포넌트입니다.
+
+## 기본 사용법
+
+```tsx
+import { TextInput } from "daleui";
+
+export function Example() {
+  return (
+    <TextInput
+      name="email"
+      label="이메일"
+      placeholder="dale@example.com"
+      helperText="새 소식을 한 달에 한 번 보내드립니다."
+      required
+    />
+  );
+}
+```

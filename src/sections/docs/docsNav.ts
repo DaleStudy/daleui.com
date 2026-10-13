@@ -63,6 +63,7 @@ export const DOCS_NAV: DocsNavCategory[] = [
         label: "레이아웃",
         items: [
           { id: "box", title: "Box" },
+          { id: "divider", title: "Divider" },
           { id: "flex", title: "Flex" },
           { id: "grid", title: "Grid" },
           { id: "hstack", title: "HStack" },
@@ -91,10 +92,12 @@ export const DOCS_NAV: DocsNavCategory[] = [
       {
         label: "일반",
         items: [
+          { id: "avatar", title: "Avatar" },
           { id: "button", title: "Button" },
           { id: "card", title: "Card" },
           { id: "icon", title: "Icon" },
           { id: "link", title: "Link" },
+          { id: "skeleton", title: "Skeleton" },
           { id: "tag", title: "Tag" },
         ],
       },

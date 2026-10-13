@@ -30,7 +30,7 @@ describe("문서 본문 모음", () => {
   });
 
   it("본문이 없는 문서에는 undefined를 반환한다", () => {
-    expect(findDocsContent("button")).toBeUndefined();
+    expect(findDocsContent("존재하지않는문서")).toBeUndefined();
   });
 });
 
