@@ -2,6 +2,7 @@ name: Preview 🔍
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, closed]
 
 concurrency:
   group: preview-${{ github.event.pull_request.number }}
@@ -9,78 +10,13 @@ concurrency:
 
 jobs:
   preview:
-    runs-on: ubuntu-latest
+    # 포크 PR에는 secret이 전달되지 않으므로 같은 저장소의 PR만 미리보기를 만든다
     if: >
       github.event.pull_request.head.repo.full_name == github.repository &&
       github.actor != 'dependabot[bot]'
     permissions:
       contents: read
       pull-requests: write
-    steps:
-      - uses: actions/checkout@v7
-
-      # 댓글에 표시할 짧은 커밋 해시와 UTC 시각 계산
-      - name: Prepare commit metadata
-        id: commit
-        run: |
-          echo "short_sha=$(echo '${{ github.event.pull_request.head.sha }}' | cut -c1-8)" >> "$GITHUB_OUTPUT"
-          echo "now=$(date -u '+%b %d %Y, %I:%M %p')" >> "$GITHUB_OUTPUT"
-          alias="pr-${{ github.event.pull_request.number }}"
-          echo "alias=$alias" >> "$GITHUB_OUTPUT"
-          echo "preview_url=https://$alias-daleui.dalestudy.workers.dev" >> "$GITHUB_OUTPUT"
-
-      - uses: oven-sh/setup-bun@v2
-      - run: bun install --frozen-lockfile
-
-      # OG 이미지를 CI 실행 간에 보존해 cache-cold로 매번 전부 재생성하는 것을 방지.
-      - name: Cache OG images
-        uses: actions/cache@v6
-        with:
-          path: public/og
-          key: og-${{ hashFiles('src/og/**', 'scripts/generate-og.mts', 'public/newLogoWithText.svg', 'public/og-background.png') }}
-          restore-keys: |
-            og-
-
-      - run: bun run build
-        env:
-          VITE_SITE_URL: ${{ steps.commit.outputs.preview_url }}
-
-      # 배포 시작 시점에 "In progress" 상태로 댓글을 먼저 남김(갱신)
-      - name: Render in-progress comment
-        env:
-          STATUS: 🔵 In progress
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          SHORT_SHA: ${{ steps.commit.outputs.short_sha }}
-          PREVIEW_URL: "-"
-          NOW: ${{ steps.commit.outputs.now }}
-        run: envsubst < .github/preview-comment.md > comment.md
-      - name: Comment build in progress
-        uses: marocchino/sticky-pull-request-comment@v3
-        with:
-          header: cloudflare-workers
-          path: comment.md
-
-      - name: Upload preview version to Cloudflare Workers
-        id: deploy
-        uses: cloudflare/wrangler-action@v4
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: "94480614a6df7731f1e4491bdac5c440"
-          packageManager: bun
-          # alias를 PR 번호로 고정해 빌드에 주입한 VITE_SITE_URL과 동일한 도메인을 보장.
-          command: versions upload --preview-alias ${{ steps.commit.outputs.alias }}
-
-      # 배포 완료 후 동일 댓글을 성공 상태로 갱신(sticky)하여 댓글이 쌓이지 않도록 함
-      - name: Render ready comment
-        env:
-          STATUS: ✅ Ready
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          SHORT_SHA: ${{ steps.commit.outputs.short_sha }}
-          PREVIEW_URL: <a href='${{ steps.commit.outputs.preview_url }}'>Commit Preview URL</a>
-          NOW: ${{ steps.commit.outputs.now }}
-        run: envsubst < .github/preview-comment.md > comment.md
-      - name: Comment preview URL on PR
-        uses: marocchino/sticky-pull-request-comment@v3
-        with:
-          header: cloudflare-workers
-          path: comment.md
+    uses: DaleStudy/.github/.github/workflows/workers-preview.yml@main
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
