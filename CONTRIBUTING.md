@@ -40,6 +40,7 @@ bun run dev
 | `src/content/docs`                | 문서 본문 MDX                                    |
 | `src/content/blog`                | Discussions에서 동기화된 생성물 (직접 수정 금지) |
 | `src/content/showcase/entries.ts` | 쇼케이스에 노출되는 프로젝트 목록                |
+| `src/examples`                    | 문서에 싣는 라이브 데모 예제                     |
 | `src/mdx`                         | 목차 추출 등 MDX 플러그인                        |
 | `styled-system`                   | `panda codegen` 생성물 (직접 수정 금지)          |
 
@@ -55,29 +56,38 @@ bun run dev
 - 사이드바 `title`이 h1으로 렌더링되므로 본문에 제목을 다시 쓰지 않습니다.
 - `##`·`###`가 우측 목차가 되고, heading `id`는 자동으로 붙습니다.
 - 프로젝트 이름은 본체 저장소와 같이 "달레 UI"로 띄어 씁니다.
-- 파운데이션 표·샘플 블록(`SemanticColorTable`, `SpacingTable` 등)은 `import` 없이 바로 쓸 수 있습니다. 목록은 `src/sections/docs/foundations`에 있습니다.
+- 파운데이션 표·샘플 블록(`SemanticColorTable`, `SpacingTable` 등)은 `import` 없이 바로 쓸 수 있습니다. 목록은 `src/sections/docs/foundations`에 있습니다. 달레 UI 컴포넌트를 본문에서 바로 쓰려면 `src/sections/docs/demoScope.ts`에 등록돼 있어야 합니다.
 - 코드 블록은 [Expressive Code](https://expressive-code.com/)로 렌더링되어 `title="src/App.tsx"` 같은 속성을 지원하고, ` ```mermaid ` 블록은 다이어그램으로 그려집니다. 외부 링크는 새 탭으로 열립니다.
 
-## 라이브 데모 (`preview`)
+## 라이브 데모 (`<Example>`)
 
-코드 펜스의 info 문자열에 `preview`를 붙이면 그 코드가 실제 컴포넌트로 렌더링됩니다. 화면에 보이는 코드와 렌더링 결과가 같은 문자열에서 나오므로 둘이 어긋날 수 없습니다.
+예제는 `src/examples/<이름>.tsx` 파일로 쓰고, 문서에서는 태그로 불러옵니다.
 
-````md
-```tsx preview
-<Button type="submit" variant="solid" tone="brand">
-  저장
-</Button>
+```tsx title="src/examples/button-basic.tsx"
+import { Button } from "daleui";
+
+export default function ButtonBasic() {
+  return (
+    <Button type="submit" variant="solid" tone="brand">
+      저장
+    </Button>
+  );
+}
 ```
-````
 
-렌더링 결과는 `CodeTabs`와 같은 `프리뷰`·`코드` 탭으로 나뉩니다. 코드 탭은 평소의 코드 블록과 똑같아서 Expressive Code의 복사 버튼을 그대로 씁니다. 프리뷰는 페이지 테마를 따르므로 다크 모드는 헤더의 테마 토글로, 반응형 동작은 브라우저 창 크기로 확인합니다.
+```md title="src/content/docs/button.mdx"
+<Example name="button-basic" />
+```
+
+`<Example>`은 빌드 타임에 `src/mdx/remark-live-demo.ts`가 치환합니다. 프리뷰는 예제 모듈을 그대로 렌더링하고, 코드 탭은 같은 파일의 원문을 코드 블록으로 심으므로 둘이 어긋날 수 없습니다. 코드 탭은 평소의 코드 블록과 똑같아서 Expressive Code의 하이라이팅과 복사 버튼을 그대로 씁니다. 프리뷰는 페이지 테마를 따르므로 다크 모드는 헤더의 테마 토글로, 반응형 동작은 브라우저 창 크기로 확인합니다.
 
 작성 규칙:
 
-- 펜스 안에는 **JSX만** 씁니다. `import` 문이나 설명을 섞으면 빌드가 실패합니다. 임포트를 보여 주려면 일반 코드 블록을 따로 둡니다.
-- 쓸 수 있는 컴포넌트는 `src/sections/docs/demoScope.ts`에 등록된 달레 UI 컴포넌트입니다. 목록에 없는 컴포넌트는 등록부터 해야 합니다.
-- 상태를 들고 있어야 하는 데모(`useState` 등)는 `preview`로 표현할 수 없습니다. 제어가 필요한 예시는 `src/sections/docs`에 컴포넌트를 만들어 `docsComponents`에 등록하고 MDX에서 태그로 씁니다.
+- 파일 이름은 `<컴포넌트>-<상황>` 꼴의 kebab-case로 짓고(`button-basic`), 그 이름이 곧 `name` 속성입니다. `name`은 문자열 리터럴이어야 하고, 해당 파일이 없으면 빌드가 실패합니다.
+- 예제 컴포넌트는 **default export**로 내보냅니다. 파일 전체가 코드 탭에 그대로 보이므로, 독자가 복사해서 바로 쓸 수 있도록 `import`까지 포함한 완결된 파일로 씁니다.
+- `useState`·이벤트 핸들러·`daleui` 밖의 import도 평소 컴포넌트처럼 쓸 수 있습니다.
 - 코드 블록을 직접 고쳐 가며 결과를 보는 인라인 편집은 지원하지 않습니다. 브라우저용 JSX 컴파일러를 문서 페이지마다 싣게 되어 비용이 크기 때문입니다. 값을 바꿔 보려면 복사해서 로컬 프로젝트에서 실행합니다.
+- 개발 서버에서 예제 파일을 고치면 코드 탭까지 갱신되도록 문서 MDX를 다시 컴파일하고 페이지를 리로드합니다.
 
 ## 검증 (Verification)
 

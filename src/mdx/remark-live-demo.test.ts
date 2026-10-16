@@ -1,28 +1,83 @@
-import type { Code, Root } from "mdast";
-import type { MdxJsxFlowElement } from "mdast-util-mdx-jsx";
-import { describe, expect, it } from "vitest";
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import type { Root, RootContent } from "mdast";
+import type {
+  MdxJsxAttributeValueExpression,
+  MdxJsxFlowElement,
+} from "mdast-util-mdx-jsx";
+import { visit } from "unist-util-visit";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { type RemarkLiveDemoOptions, remarkLiveDemo } from "./remark-live-demo";
 
-function code(value: string, meta: string | null = "preview"): Code {
-  return { type: "code", lang: "tsx", meta, value };
+const SOURCE = `import { Button } from "daleui";
+
+export default function ButtonBasic() {
+  return <Button tone="brand">저장</Button>;
+}
+`;
+
+/** 실제 저장소와 같은 배치를 임시 디렉터리에 만들어, 생성되는 import 경로까지 확인합니다. */
+let root: string;
+let examplesDir: string;
+let docPath: string;
+
+beforeAll(() => {
+  root = mkdtempSync(path.join(tmpdir(), "daleui-"));
+  examplesDir = path.join(root, "src", "examples");
+  docPath = path.join(root, "src", "content", "docs", "button.mdx");
+  mkdirSync(examplesDir, { recursive: true });
+  mkdirSync(path.dirname(docPath), { recursive: true });
+  writeFileSync(path.join(examplesDir, "button-basic.tsx"), SOURCE, "utf8");
+  writeFileSync(path.join(examplesDir, "a-b.tsx"), "export default null;\n");
+  writeFileSync(path.join(examplesDir, "a_b.tsx"), "export default null;\n");
+});
+
+afterAll(() => {
+  rmSync(root, { recursive: true, force: true });
+});
+
+/** `name`에 `null`을 주면 속성이 없는 `<Example />`이 됩니다. */
+function example(
+  name: string | MdxJsxAttributeValueExpression | null = "button-basic",
+): MdxJsxFlowElement {
+  return {
+    type: "mdxJsxFlowElement",
+    name: "Example",
+    attributes:
+      name === null
+        ? []
+        : [{ type: "mdxJsxAttribute", name: "name", value: name }],
+    children: [],
+  };
 }
 
 function transform(
-  tree: Root,
+  children: RootContent[],
   options?: RemarkLiveDemoOptions,
-  path?: string,
+  file: { path?: string } = { path: docPath },
 ): Root {
+  const tree: Root = { type: "root", children };
   const plugin = remarkLiveDemo as (
     options?: RemarkLiveDemoOptions,
   ) => (tree: Root, file: { path?: string }) => void;
-  plugin(options)(tree, { path });
+  plugin({ examplesDir, ...options })(tree, file);
   return tree;
 }
 
 function demoOf(tree: Root): MdxJsxFlowElement {
-  const node = tree.children[0];
-  if (node.type !== "mdxJsxFlowElement") {
-    throw new Error("LiveDemo로 감싸지 않았습니다");
+  const node = tree.children.find(
+    (child): child is MdxJsxFlowElement =>
+      child.type === "mdxJsxFlowElement" && child.name === "LiveDemo",
+  );
+  if (!node) {
+    throw new Error("LiveDemo로 바꾸지 않았습니다");
   }
   return node;
 }
@@ -47,18 +102,21 @@ function slotOf(demo: MdxJsxFlowElement, name: string): MdxJsxFlowElement {
   return slot;
 }
 
+function importsOf(tree: Root): string[] {
+  return tree.children
+    .filter((child) => child.type === "mdxjsEsm")
+    .map((child) => child.value);
+}
+
 describe("remarkLiveDemo", () => {
-  it("preview 플래그가 붙은 코드 펜스를 LiveDemo로 감싼다", () => {
-    const tree = transform({
-      type: "root",
-      children: [code('<Button tone="brand">저장</Button>')],
-    });
+  it("Example 태그를 import와 LiveDemo 슬롯으로 바꾼다", () => {
+    const tree = transform([example()]);
 
-    const demo = demoOf(tree);
-
-    expect(demo.name).toBe("LiveDemo");
+    expect(importsOf(tree)).toEqual([
+      'import _Example_button_basic from "../../examples/button-basic.tsx";',
+    ]);
     expect(
-      demo.children.map((child) =>
+      demoOf(tree).children.map((child) =>
         child.type === "mdxJsxFlowElement"
           ? [child.name, nameOf(child)]
           : child.type,
@@ -69,130 +127,136 @@ describe("remarkLiveDemo", () => {
     ]);
   });
 
-  it("코드 문자열을 파싱해 프리뷰 JSX로 넣는다", () => {
-    const tree = transform({
-      type: "root",
-      children: [code('<Button tone="brand">저장</Button>')],
-    });
+  it("프리뷰 자리에 예제 컴포넌트를 자식 없이 렌더링한다", () => {
+    const preview = slotOf(demoOf(transform([example()])), "preview");
 
-    const preview = slotOf(demoOf(tree), "preview");
-
-    expect(preview.children).toHaveLength(1);
-    expect(preview.children[0]).toMatchObject({
-      type: "mdxJsxTextElement",
-      name: "Button",
-    });
-  });
-
-  it("여러 줄로 쓴 JSX와 줄바꿈 공백을 함께 처리한다", () => {
-    const tree = transform({
-      type: "root",
-      children: [code("<Button>저장</Button>\n<Button>취소</Button>")],
-    });
-
-    const preview = slotOf(demoOf(tree), "preview");
-
-    expect(preview.children.map((child) => child.type)).toEqual([
-      "mdxJsxTextElement",
-      "mdxJsxTextElement",
+    expect(preview.children).toEqual([
+      {
+        type: "mdxJsxFlowElement",
+        name: "_Example_button_basic",
+        attributes: [],
+        children: [],
+      },
     ]);
   });
 
-  it("JSX 사이의 한 줄 공백은 남긴다", () => {
-    const tree = transform({
-      type: "root",
-      children: [code("<Tag>a</Tag> <Tag>b</Tag>")],
+  it("프리뷰를 마크다운으로 다시 파싱하지 않는다", () => {
+    const types: string[] = [];
+
+    visit(slotOf(demoOf(transform([example()])), "preview"), (node) => {
+      types.push(node.type);
     });
 
-    const preview = slotOf(demoOf(tree), "preview");
-
-    expect(preview.children.map((child) => child.type)).toEqual([
-      "mdxJsxTextElement",
-      "text",
-      "mdxJsxTextElement",
-    ]);
+    expect(types).not.toContain("paragraph");
+    expect(types).not.toContain("text");
   });
 
-  it("원본 코드 펜스를 그대로 남겨 하이라이팅을 유지한다", () => {
-    const tree = transform({
-      type: "root",
-      children: [code("<Button />")],
-    });
+  it("코드 탭에 예제 파일 원문을 그대로 넣는다", () => {
+    const block = slotOf(demoOf(transform([example()])), "code").children[0];
 
-    const block = slotOf(demoOf(tree), "code").children[0];
-
-    expect(block).toMatchObject({
+    expect(block).toEqual({
       type: "code",
       lang: "tsx",
-      value: "<Button />",
+      value: SOURCE.trimEnd(),
     });
   });
 
-  it("Expressive Code가 모르는 preview 플래그만 떼고 나머지 meta는 남긴다", () => {
-    const tree = transform({
-      type: "root",
-      children: [code("<Button />", 'preview title="src/App.tsx"')],
-    });
+  it("같은 예제를 여러 번 써도 import는 한 번만 넣는다", () => {
+    const tree = transform([example(), example()]);
 
-    const block = slotOf(demoOf(tree), "code").children[0];
-
-    expect(block).toMatchObject({ meta: 'title="src/App.tsx"' });
+    expect(importsOf(tree)).toHaveLength(1);
   });
 
-  it("meta가 preview뿐이면 meta를 비운다", () => {
-    const tree = transform({
-      type: "root",
-      children: [code("<Button />")],
-    });
+  it("식별자가 겹치는 이름끼리도 다른 import를 쓴다", () => {
+    const tree = transform([example("a-b"), example("a_b")]);
 
-    const block = slotOf(demoOf(tree), "code").children[0];
-
-    expect(block).toMatchObject({ meta: null });
+    expect(importsOf(tree)).toEqual([
+      'import _Example_a_b from "../../examples/a-b.tsx";',
+      'import _Example_a_b_2 from "../../examples/a_b.tsx";',
+    ]);
   });
 
-  it("preview 플래그가 없는 코드 펜스는 건드리지 않는다", () => {
-    const tree = transform({
-      type: "root",
-      children: [code("<Button />", null), code("<Button />", "title='a.tsx'")],
+  it("예제가 문서 아래에 있으면 상대 경로에 ./를 붙인다", () => {
+    const tree = transform([example()], undefined, {
+      path: path.join(root, "button.mdx"),
     });
 
-    expect(tree.children.map((child) => child.type)).toEqual(["code", "code"]);
+    expect(importsOf(tree)).toEqual([
+      'import _Example_button_basic from "./src/examples/button-basic.tsx";',
+    ]);
   });
 
-  it("import 문이 섞이면 오류로 알려 준다", () => {
+  it("예제 디렉터리를 주지 않으면 저장소의 src/examples를 읽는다", () => {
+    const tree = transform(
+      [example()],
+      { examplesDir: undefined },
+      { path: path.join(process.cwd(), "src/content/docs/button.mdx") },
+    );
+
+    expect(importsOf(tree)).toEqual([
+      'import _Example_button_basic from "../../examples/button-basic.tsx";',
+    ]);
+    expect(slotOf(demoOf(tree), "code").children[0]).toMatchObject({
+      value: readFileSync("src/examples/button-basic.tsx", "utf8").trimEnd(),
+    });
+  });
+
+  it("Example이 아닌 JSX는 건드리지 않는다", () => {
+    const gallery: MdxJsxFlowElement = {
+      type: "mdxJsxFlowElement",
+      name: "IconGallery",
+      attributes: [],
+      children: [],
+    };
+
+    const tree = transform([gallery]);
+
+    expect(tree.children).toEqual([gallery]);
+  });
+
+  it("예제 파일이 없으면 문서 경로와 함께 빌드를 세운다", () => {
+    expect(() => transform([example("없는-예제")])).toThrowError(
+      /button\.mdx: 예제 파일이 없습니다 \(.*없는-예제\.tsx\)/,
+    );
+  });
+
+  it("name이 문자열 리터럴이 아니면 빌드를 세운다", () => {
     expect(() =>
-      transform({
-        type: "root",
-        children: [code('import { Button } from "daleui";\n\n<Button />')],
-      }),
-    ).toThrowError(/preview 코드 블록은 JSX만 담습니다 \(mdxjsEsm\)/);
+      transform([
+        example({ type: "mdxJsxAttributeValueExpression", value: "name" }),
+      ]),
+    ).toThrowError(
+      /button\.mdx: <Example>의 name은 문자열 리터럴이어야 합니다/,
+    );
   });
 
-  it("JSX 옆에 설명이 섞이면 오류로 알려 준다", () => {
-    expect(() =>
-      transform({
-        type: "root",
-        children: [code("저장 버튼 <Button />")],
-      }),
-    ).toThrowError(/preview 코드 블록은 JSX만 담습니다 \(text\)/);
+  it("name이 없으면 빌드를 세운다", () => {
+    expect(() => transform([example(null)])).toThrowError(
+      /<Example>의 name은 문자열 리터럴이어야 합니다/,
+    );
+  });
+
+  it("경로를 모르는 파일은 문서라고만 알려 준다", () => {
+    expect(() => transform([example("없는-예제")], {}, {})).toThrowError(
+      /^문서: 예제 파일이 없습니다/,
+    );
   });
 
   it("include에 맞지 않는 파일은 건드리지 않는다", () => {
     const tree = transform(
-      { type: "root", children: [code("<Button />")] },
+      [example()],
       { include: /[\\/]docs[\\/]/ },
-      "/repo/src/content/blog/275.md",
+      {
+        path: "/repo/src/content/blog/275.md",
+      },
     );
 
-    expect(tree.children[0]).toMatchObject({ type: "code", meta: "preview" });
+    expect(tree.children).toEqual([example()]);
   });
 
   it("경로를 모르는 파일도 include가 있으면 건드리지 않는다", () => {
-    const tree = transform(
-      { type: "root", children: [code("<Button />")] },
-      { include: /[\\/]docs[\\/]/ },
-    );
+    const tree = transform([example()], { include: /[\\/]docs[\\/]/ }, {});
 
-    expect(tree.children[0]).toMatchObject({ type: "code" });
+    expect(tree.children).toEqual([example()]);
   });
 });

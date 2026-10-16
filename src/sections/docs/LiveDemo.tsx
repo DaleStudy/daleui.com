@@ -15,7 +15,7 @@ interface LiveDemoSlotProps {
   children: ReactNode;
 }
 
-/** LiveDemo의 한 자리를 채웁니다. `remark-live-demo`가 코드 펜스에서 만들어 줍니다. */
+/** LiveDemo의 한 자리를 채웁니다. `remark-live-demo`가 `<Example>`에서 만들어 줍니다. */
 export function LiveDemoSlot({ children }: LiveDemoSlotProps) {
   return <>{children}</>;
 }

@@ -1,7 +1,10 @@
-import type { Code, Root, RootContent } from "mdast";
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
+import type { Code, Root } from "mdast";
 import { fromMarkdown } from "mdast-util-from-markdown";
 import { mdxFromMarkdown } from "mdast-util-mdx";
 import type { MdxJsxFlowElement } from "mdast-util-mdx-jsx";
+import type { MdxjsEsm } from "mdast-util-mdxjs-esm";
 import { mdxjs } from "micromark-extension-mdxjs";
 import type { Plugin } from "unified";
 import { SKIP, visit } from "unist-util-visit";
@@ -9,53 +12,74 @@ import { SKIP, visit } from "unist-util-visit";
 export interface RemarkLiveDemoOptions {
   /** 이 정규식에 맞는 경로만 처리합니다. 없으면 모든 파일을 처리합니다. */
   include?: RegExp;
+  /** 예제 파일을 찾을 디렉터리입니다. 기본값은 `<cwd>/src/examples`입니다. */
+  examplesDir?: string;
 }
 
-const PREVIEW_FLAG = /(?:^|\s)preview(?=\s|$)/;
+const EXAMPLE_TAG = "Example";
 
-/** 프리뷰는 MDX 모듈 안에서 그대로 렌더링되므로 top-level import·설명은 담을 수 없습니다. */
-const JSX_NODES = new Set([
-  "mdxJsxFlowElement",
-  "mdxJsxTextElement",
-  "mdxFlowExpression",
-  "mdxTextExpression",
-]);
-
-function reject(path: string, type: string): never {
-  throw new Error(
-    `${path}: preview 코드 블록은 JSX만 담습니다 (${type}). import 문이나 설명은 일반 코드 블록에 써 주세요.`,
+function attributeValue(node: MdxJsxFlowElement, name: string): unknown {
+  const attribute = node.attributes.find(
+    (candidate) =>
+      candidate.type === "mdxJsxAttribute" && candidate.name === name,
   );
+
+  return attribute?.type === "mdxJsxAttribute" ? attribute.value : undefined;
 }
 
-/**
- * 코드 펜스 안의 JSX를 mdast 노드로 바꿉니다.
- * 한 줄로 쓴 JSX는 문단으로 파싱되므로, 문단은 걷어내고 JSX만 남깁니다.
- * 줄바꿈뿐인 공백은 JSX와 같은 규칙으로 버립니다.
- */
-function parsePreview(code: Code, path: string): RootContent[] {
-  const tree = fromMarkdown(code.value, {
-    extensions: [mdxjs()],
-    mdastExtensions: [mdxFromMarkdown()],
-  });
+function exampleFile(dir: string, name: string): string {
+  return path.join(dir, `${name}.tsx`);
+}
 
-  return tree.children.flatMap<RootContent>((node) => {
-    if (JSX_NODES.has(node.type)) {
-      return [node];
-    }
-    if (node.type !== "paragraph") {
-      return reject(path, node.type);
-    }
+function readExample(file: string, label: string): string {
+  if (!existsSync(file)) {
+    throw new Error(`${label}: 예제 파일이 없습니다 (${file}).`);
+  }
 
-    return node.children.filter((child) => {
-      if (JSX_NODES.has(child.type)) {
-        return true;
-      }
-      if (child.type === "text" && child.value.trim() === "") {
-        return !child.value.includes("\n");
-      }
-      return reject(path, child.type);
-    });
-  });
+  return readFileSync(file, "utf8").trimEnd();
+}
+
+/** 문서에서 예제 모듈까지의 상대 경로입니다. */
+function specifierOf(docPath: string, file: string): string {
+  const relative = path
+    .relative(path.dirname(docPath), file)
+    .split(path.sep)
+    .join("/");
+
+  return relative.startsWith(".") ? relative : `./${relative}`;
+}
+
+/** 예제 이름은 식별자로 쓸 수 없는 글자를 담을 수 있으므로, 문서 안에서 겹치지 않는 이름을 새로 만듭니다. */
+function identifierOf(name: string, imports: Map<string, string>): string {
+  const existing = imports.get(name);
+  if (existing) {
+    return existing;
+  }
+
+  const base = `_Example_${name.replace(/[^\p{L}\p{N}_$]+/gu, "_")}`;
+  const taken = new Set(imports.values());
+  let identifier = base;
+  let suffix = 1;
+  while (taken.has(identifier)) {
+    suffix += 1;
+    identifier = `${base}_${suffix}`;
+  }
+
+  imports.set(name, identifier);
+  return identifier;
+}
+
+/** import 문의 estree는 손으로 짜기 번거로우므로 MDX 파서에 맡깁니다. */
+function esmImport(identifier: string, specifier: string): MdxjsEsm {
+  const tree = fromMarkdown(
+    `import ${identifier} from ${JSON.stringify(specifier)};`,
+    {
+      extensions: [mdxjs()],
+      mdastExtensions: [mdxFromMarkdown()],
+    },
+  );
+
+  return tree.children[0] as MdxjsEsm;
 }
 
 function slot(
@@ -70,46 +94,66 @@ function slot(
   };
 }
 
-function liveDemo(code: Code, preview: RootContent[]): MdxJsxFlowElement {
+function component(identifier: string): MdxJsxFlowElement {
   return {
     type: "mdxJsxFlowElement",
-    name: "LiveDemo",
+    name: identifier,
     attributes: [],
-    children: [
-      slot("preview", preview as MdxJsxFlowElement["children"]),
-      slot("code", [code]),
-    ],
+    children: [],
   };
 }
 
+function block(source: string): Code {
+  return { type: "code", lang: "tsx", value: source };
+}
+
 /**
- * `preview` 플래그가 붙은 코드 펜스를 라이브 데모로 바꿉니다.
- * 코드 펜스를 그대로 남겨 두므로 Expressive Code 하이라이팅이 유지되고,
- * 화면에 보이는 코드와 렌더링되는 결과가 같은 문자열에서 나옵니다.
+ * `<Example name="button-basic" />`을 `src/examples/button-basic.tsx` 라이브 데모로 바꿉니다.
+ * 프리뷰는 예제 모듈을 그대로 렌더링하고, 코드 탭은 같은 파일의 원문을 Expressive Code로 보여 줍니다.
+ * 런타임에서 소스를 읽지 않고 빌드 타임에 코드 펜스로 심는 이유는, rehype 단계를 거쳐야
+ * 하이라이팅과 복사 버튼이 붙기 때문입니다.
  */
 export const remarkLiveDemo: Plugin<[RemarkLiveDemoOptions?], Root> =
-  ({ include } = {}) =>
+  ({ include, examplesDir } = {}) =>
   (tree, file) => {
     if (include && !include.test(file.path ?? "")) {
       return;
     }
 
-    visit(tree, "code", (node, index, parent) => {
-      if (!parent || index === undefined || !node.meta) {
-        return;
-      }
-      if (!PREVIEW_FLAG.test(node.meta)) {
+    const dir = examplesDir ?? path.join(process.cwd(), "src", "examples");
+    const docPath = file.path ?? "";
+    const label = file.path ?? "문서";
+    const imports = new Map<string, string>();
+
+    visit(tree, "mdxJsxFlowElement", (node) => {
+      if (node.name !== EXAMPLE_TAG) {
         return;
       }
 
-      // Expressive Code가 모르는 플래그이므로 떼어 냅니다.
-      node.meta = node.meta.replace(PREVIEW_FLAG, "").trim() || null;
+      const name = attributeValue(node, "name");
+      if (typeof name !== "string") {
+        throw new Error(
+          `${label}: <Example>의 name은 문자열 리터럴이어야 합니다.`,
+        );
+      }
 
-      const demo = liveDemo(node, parsePreview(node, file.path ?? "문서"));
-      (parent.children as RootContent[])[index] = demo;
+      const source = readExample(exampleFile(dir, name), label);
+
+      node.name = "LiveDemo";
+      node.attributes = [];
+      node.children = [
+        slot("preview", [component(identifierOf(name, imports))]),
+        slot("code", [block(source)]),
+      ];
 
       return SKIP;
     });
+
+    tree.children.unshift(
+      ...[...imports].map(([name, identifier]) =>
+        esmImport(identifier, specifierOf(docPath, exampleFile(dir, name))),
+      ),
+    );
   };
 
 export default remarkLiveDemo;
