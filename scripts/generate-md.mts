@@ -6,7 +6,9 @@
  *
  * MDX를 remark로 파싱해 JSX(ESM import/export, 표현식, 커스텀 컴포넌트)를
  * 걷어낸 순수 Markdown으로 변환합니다. 자식 Markdown(제목·문단·표·코드 등)은
- * 그대로 보존합니다. 산출물은 `public/` 아래 정적 자산으로 복사되어
+ * 그대로 보존합니다. 자식이 없는 문서 컴포넌트(`<SpacingTable />` 등)는
+ * 제거하기 전에 `expandComponents`로 표·목록을 먼저 펼칩니다.
+ * 산출물은 `public/` 아래 정적 자산으로 복사되어
  * `/docs/<slug>.md`, `/blog/<slug>.md`로 서빙됩니다. (사람용 HTML 페이지의
  * LLM·크롤러용 원문 버전)
  *
@@ -31,6 +33,7 @@ import remarkGfm from "remark-gfm";
 import remarkStringify from "remark-stringify";
 import { SKIP, visit } from "unist-util-visit";
 import { DOCS_FLAT_ITEMS } from "../src/sections/docs/docsNav.ts";
+import { expandComponents } from "./expand-mdx-components.mts";
 
 const ROOT = join(import.meta.dirname, "..");
 const DOCS_DIR = join(ROOT, "src", "content", "docs");
@@ -127,7 +130,7 @@ async function generateDocs(): Promise<number> {
     files.map(async (name) => {
       const slug = name.replace(/\.mdx$/, "");
       const raw = await readFile(join(DOCS_DIR, name), "utf8");
-      const body = await toMarkdown(docsProcessor, raw);
+      const body = await toMarkdown(docsProcessor, expandComponents(raw));
       const title = titleById.get(slug);
       const md = title ? `# ${title}\n\n${body}` : body;
       await writeFile(join(OUT_DOCS, `${slug}.md`), md);
