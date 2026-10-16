@@ -14,7 +14,7 @@ import type {
 } from "mdast-util-mdx-jsx";
 import { visit } from "unist-util-visit";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { type RemarkLiveDemoOptions, remarkLiveDemo } from "./remark-live-demo";
+import { type RemarkExampleOptions, remarkExample } from "./remark-example";
 
 const SOURCE = `import { Button } from "daleui";
 
@@ -60,46 +60,34 @@ function example(
 
 function transform(
   children: RootContent[],
-  options?: RemarkLiveDemoOptions,
+  options?: RemarkExampleOptions,
   file: { path?: string } = { path: docPath },
 ): Root {
   const tree: Root = { type: "root", children };
-  const plugin = remarkLiveDemo as (
-    options?: RemarkLiveDemoOptions,
+  const plugin = remarkExample as (
+    options?: RemarkExampleOptions,
   ) => (tree: Root, file: { path?: string }) => void;
   plugin({ examplesDir, ...options })(tree, file);
   return tree;
 }
 
-function demoOf(tree: Root): MdxJsxFlowElement {
+function tabsOf(tree: Root): MdxJsxFlowElement {
   const node = tree.children.find(
     (child): child is MdxJsxFlowElement =>
-      child.type === "mdxJsxFlowElement" && child.name === "LiveDemo",
+      child.type === "mdxJsxFlowElement" && child.name === "ExampleTabs",
   );
   if (!node) {
-    throw new Error("LiveDemo로 바꾸지 않았습니다");
+    throw new Error("ExampleTabs로 바꾸지 않았습니다");
   }
   return node;
 }
 
-function nameOf(node: MdxJsxFlowElement): string | null {
-  const attribute = node.attributes.find(
-    (attr) => attr.type === "mdxJsxAttribute" && attr.name === "name",
-  );
-  return typeof attribute?.value === "string" ? attribute.value : null;
+function previewOf(tree: Root) {
+  return tabsOf(tree).children[0];
 }
 
-function slotOf(demo: MdxJsxFlowElement, name: string): MdxJsxFlowElement {
-  const slot = demo.children.find(
-    (child): child is MdxJsxFlowElement =>
-      child.type === "mdxJsxFlowElement" &&
-      child.name === "LiveDemoSlot" &&
-      nameOf(child) === name,
-  );
-  if (!slot) {
-    throw new Error(`${name} 슬롯이 없습니다`);
-  }
-  return slot;
+function codeOf(tree: Root) {
+  return tabsOf(tree).children[1];
 }
 
 function importsOf(tree: Root): string[] {
@@ -108,42 +96,29 @@ function importsOf(tree: Root): string[] {
     .map((child) => child.value);
 }
 
-describe("remarkLiveDemo", () => {
-  it("Example 태그를 import와 LiveDemo 슬롯으로 바꾼다", () => {
+describe("remarkExample", () => {
+  it("Example 태그를 import와 ExampleTabs로 바꾼다", () => {
     const tree = transform([example()]);
 
     expect(importsOf(tree)).toEqual([
       'import _Example_button_basic from "../../examples/button-basic.tsx";',
     ]);
-    expect(
-      demoOf(tree).children.map((child) =>
-        child.type === "mdxJsxFlowElement"
-          ? [child.name, nameOf(child)]
-          : child.type,
-      ),
-    ).toEqual([
-      ["LiveDemoSlot", "preview"],
-      ["LiveDemoSlot", "code"],
-    ]);
+    expect(tabsOf(tree).attributes).toEqual([]);
   });
 
-  it("프리뷰 자리에 예제 컴포넌트를 자식 없이 렌더링한다", () => {
-    const preview = slotOf(demoOf(transform([example()])), "preview");
-
-    expect(preview.children).toEqual([
-      {
-        type: "mdxJsxFlowElement",
-        name: "_Example_button_basic",
-        attributes: [],
-        children: [],
-      },
-    ]);
+  it("첫 자식으로 예제 컴포넌트를 자식 없이 넣는다", () => {
+    expect(previewOf(transform([example()]))).toEqual({
+      type: "mdxJsxFlowElement",
+      name: "_Example_button_basic",
+      attributes: [],
+      children: [],
+    });
   });
 
   it("프리뷰를 마크다운으로 다시 파싱하지 않는다", () => {
     const types: string[] = [];
 
-    visit(slotOf(demoOf(transform([example()])), "preview"), (node) => {
+    visit(previewOf(transform([example()])), (node) => {
       types.push(node.type);
     });
 
@@ -151,10 +126,8 @@ describe("remarkLiveDemo", () => {
     expect(types).not.toContain("text");
   });
 
-  it("코드 탭에 예제 파일 원문을 그대로 넣는다", () => {
-    const block = slotOf(demoOf(transform([example()])), "code").children[0];
-
-    expect(block).toEqual({
+  it("둘째 자식 코드 블록에 예제 파일 원문을 그대로 넣는다", () => {
+    expect(codeOf(transform([example()]))).toEqual({
       type: "code",
       lang: "tsx",
       value: SOURCE.trimEnd(),
@@ -196,7 +169,7 @@ describe("remarkLiveDemo", () => {
     expect(importsOf(tree)).toEqual([
       'import _Example_button_basic from "../../examples/button-basic.tsx";',
     ]);
-    expect(slotOf(demoOf(tree), "code").children[0]).toMatchObject({
+    expect(codeOf(tree)).toMatchObject({
       value: readFileSync("src/examples/button-basic.tsx", "utf8").trimEnd(),
     });
   });

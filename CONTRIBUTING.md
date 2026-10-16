@@ -40,7 +40,7 @@ bun run dev
 | `src/content/docs`                | 문서 본문 MDX                                    |
 | `src/content/blog`                | Discussions에서 동기화된 생성물 (직접 수정 금지) |
 | `src/content/showcase/entries.ts` | 쇼케이스에 노출되는 프로젝트 목록                |
-| `src/examples`                    | 문서에 싣는 라이브 데모 예제                     |
+| `src/examples`                    | 문서에 싣는 예제 컴포넌트                        |
 | `src/mdx`                         | 목차 추출 등 MDX 플러그인                        |
 | `styled-system`                   | `panda codegen` 생성물 (직접 수정 금지)          |
 
@@ -56,10 +56,10 @@ bun run dev
 - 사이드바 `title`이 h1으로 렌더링되므로 본문에 제목을 다시 쓰지 않습니다.
 - `##`·`###`가 우측 목차가 되고, heading `id`는 자동으로 붙습니다.
 - 프로젝트 이름은 본체 저장소와 같이 "달레 UI"로 띄어 씁니다.
-- 파운데이션 표·샘플 블록(`SemanticColorTable`, `SpacingTable` 등)은 `import` 없이 바로 쓸 수 있습니다. 목록은 `src/sections/docs/foundations`에 있습니다. 달레 UI 컴포넌트를 본문에서 바로 쓰려면 `src/sections/docs/demoScope.ts`에 등록돼 있어야 합니다.
+- 파운데이션 표·샘플 블록(`SemanticColorTable`, `SpacingTable` 등)은 `import` 없이 바로 쓸 수 있습니다. 목록은 `src/sections/docs/foundations`에 있습니다. 달레 UI 컴포넌트를 쓰는 예시는 본문에 직접 쓰지 않고 아래의 `<Example>`로 싣습니다.
 - 코드 블록은 [Expressive Code](https://expressive-code.com/)로 렌더링되어 `title="src/App.tsx"` 같은 속성을 지원하고, ` ```mermaid ` 블록은 다이어그램으로 그려집니다. 외부 링크는 새 탭으로 열립니다.
 
-## 라이브 데모 (`<Example>`)
+## 예제 (`<Example>`)
 
 예제는 `src/examples/<이름>.tsx` 파일로 쓰고, 문서에서는 태그로 불러옵니다.
 
@@ -79,7 +79,7 @@ export default function ButtonBasic() {
 <Example name="button-basic" />
 ```
 
-`<Example>`은 빌드 타임에 `src/mdx/remark-live-demo.ts`가 치환합니다. 프리뷰는 예제 모듈을 그대로 렌더링하고, 코드 탭은 같은 파일의 원문을 코드 블록으로 심으므로 둘이 어긋날 수 없습니다. 코드 탭은 평소의 코드 블록과 똑같아서 Expressive Code의 하이라이팅과 복사 버튼을 그대로 씁니다. 프리뷰는 페이지 테마를 따르므로 다크 모드는 헤더의 테마 토글로, 반응형 동작은 브라우저 창 크기로 확인합니다.
+`<Example>`은 빌드 타임에 `src/mdx/remark-example.ts`가 치환합니다. 프리뷰는 예제 모듈을 그대로 렌더링하고, 코드 탭은 같은 파일의 원문을 코드 블록으로 심으므로 둘이 어긋날 수 없습니다. 코드 탭은 평소의 코드 블록과 똑같아서 Expressive Code의 하이라이팅과 복사 버튼을 그대로 씁니다. 프리뷰는 페이지 테마를 따르므로 다크 모드는 헤더의 테마 토글로, 반응형 동작은 브라우저 창 크기로 확인합니다.
 
 작성 규칙:
 

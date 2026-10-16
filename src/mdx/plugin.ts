@@ -1,6 +1,5 @@
 import mdx from "@mdx-js/rollup";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import type { HmrContext } from "vite";
 import rehypeExpressiveCode from "rehype-expressive-code";
 import rehypeExternalLinks from "rehype-external-links";
 import rehypeMermaid from "rehype-mermaid";
@@ -8,8 +7,9 @@ import rehypeSlug from "rehype-slug";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
+import type { HmrContext } from "vite";
 import { remarkDocsToc } from "./remark-docs-toc";
-import { remarkLiveDemo } from "./remark-live-demo";
+import { remarkExample } from "./remark-example";
 import { remarkVideoLink } from "./remark-video-link";
 
 /** 목차와 heading id 생성은 문서 본문에만 적용합니다. 블로그 글은 기존대로 rehype-slug가 맡습니다. */
@@ -26,7 +26,7 @@ function isDocsMdx(file: string) {
  * 코드 탭이 갱신됩니다. MDX 모듈은 HMR 경계가 아니라 어차피 리로드로 번지므로,
  * 문서 MDX 모듈을 모두 무효화하고 바로 전체 리로드합니다.
  */
-function invalidateDocs({ file, server }: HmrContext) {
+function reloadDocsOnExampleChange({ file, server }: HmrContext) {
   if (!EXAMPLE_SOURCE.test(file)) {
     return;
   }
@@ -58,7 +58,7 @@ export function mdxPlugin() {
         remarkGfm,
         remarkVideoLink,
         [remarkDocsToc, { include: DOCS_CONTENT }],
-        [remarkLiveDemo, { include: DOCS_CONTENT }],
+        [remarkExample, { include: DOCS_CONTENT }],
       ],
       rehypePlugins: [
         rehypeSlug,
@@ -76,6 +76,6 @@ export function mdxPlugin() {
         ],
       ],
     }),
-    handleHotUpdate: invalidateDocs,
+    handleHotUpdate: reloadDocsOnExampleChange,
   };
 }

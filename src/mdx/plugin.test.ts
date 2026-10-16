@@ -51,7 +51,7 @@ describe("mdxPlugin", () => {
   it("예제 밖의 파일은 기본 HMR에 맡긴다", () => {
     const target = server(["/repo/src/content/docs/button.mdx"]);
 
-    hotUpdate("/repo/src/sections/docs/LiveDemo.tsx", target);
+    hotUpdate("/repo/src/sections/docs/ExampleTabs.tsx", target);
 
     expect(target.invalidated).toEqual([]);
     expect(target.sent).toEqual([]);
