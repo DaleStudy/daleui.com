@@ -311,7 +311,7 @@ function renderIndex(sets: TopicSet[], pages: DocPage[]): string {
       docSections.push(`### ${category}`, "");
     }
     const label = page.group ? `${page.group} · ${page.title}` : page.title;
-    docSections.push(`- [${label}](${SITE_URL}/docs/${page.id})`);
+    docSections.push(`- [${label}](${SITE_URL}/docs/${page.id}.md)`);
   }
 
   return [
