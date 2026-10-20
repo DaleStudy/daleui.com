@@ -7,6 +7,8 @@
   "assets": {
     "directory": "./dist/client",
     "not_found_handling": "single-page-application",
+    // 내부 링크와 같은 슬래시 없는 경로를 정규로 삼는다
+    "html_handling": "drop-trailing-slash",
   },
   "routes": [
     { "pattern": "daleui.com", "custom_domain": true },
