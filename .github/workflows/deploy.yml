@@ -12,6 +12,9 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.daleui.com
     steps:
       - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2
