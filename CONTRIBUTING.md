@@ -75,7 +75,7 @@ pre-commit 훅이 staged 파일에 `eslint --fix`와 `prettier --write`를 적�
 - 커밋 메시지는 Conventional Commits 접두사를 붙인 영어 한 줄로 씁니다 (예: `docs: add contributing page`).
 - PR 제목과 본문은 한국어로 쓰고, 연결된 이슈를 사이드바 Development 항목에서 지정합니다.
 - 리뷰를 요청하기 전에 `Integration 🔀` 워크플로우가 통과하는지 확인해주세요.
-- PR 댓글로 올라오는 Cloudflare Preview URL에서 변경 사항을 직접 확인해주세요. 포크에서 올린 PR에는 프리뷰가 생성되지 않으므로 메인테이너가 대신 확인합니다.
+- PR 타임라인의 **View deployment** 버튼으로 프리뷰를 열어 변경 사항을 직접 확인해주세요. 포크에서 올린 PR에는 프리뷰가 생성되지 않으므로 메인테이너가 대신 확인합니다.
 - 승인 1개 이상(권장 2개)을 받으면 `main`에 병합하고, `Deploy 🚀` 워크플로우가 프로덕션에 배포합니다.
 
 ## 함께 이야기하기
