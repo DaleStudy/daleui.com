@@ -8,6 +8,10 @@ import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import type { HmrContext } from "vite";
+import {
+  expressiveCodeOptions,
+  rehypeDropExpressiveCodeScripts,
+} from "./expressive-code";
 import { remarkDocsToc } from "./remark-docs-toc";
 import { remarkExample } from "./remark-example";
 import { remarkVideoLink } from "./remark-video-link";
@@ -68,12 +72,8 @@ export function mdxPlugin() {
           { target: "_blank", rel: ["noopener", "noreferrer"] },
         ],
         [rehypeMermaid, { strategy: "pre-mermaid" }],
-        [
-          rehypeExpressiveCode,
-          {
-            themes: ["github-light", "github-dark"],
-          },
-        ],
+        [rehypeExpressiveCode, expressiveCodeOptions],
+        rehypeDropExpressiveCodeScripts,
       ],
     }),
     handleHotUpdate: reloadDocsOnExampleChange,
