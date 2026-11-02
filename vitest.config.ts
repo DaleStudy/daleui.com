@@ -1,10 +1,11 @@
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
+import { expressiveCodeScriptsPlugin } from "./src/mdx/expressive-code";
 import { mdxPlugin } from "./src/mdx/plugin";
 
 export default defineConfig({
-  plugins: [mdxPlugin(), react(), svgr()],
+  plugins: [mdxPlugin(), expressiveCodeScriptsPlugin(), react(), svgr()],
   test: {
     environment: "happy-dom",
     setupFiles: ["./src/setupTests.tsx"],
