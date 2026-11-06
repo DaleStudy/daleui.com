@@ -12,14 +12,18 @@ import { Card } from "daleui";
 export function Example() {
   return (
     <Card tone="brand" outline>
-      <Card.Icon name="award" />
+      <Card.Header>
+        <Card.Icon name="award" />
+      </Card.Header>
       <Card.Body>
         <Card.Title>디자인 토큰</Card.Title>
         <Card.Description>
           색·타이포그래피·여백을 이름으로 쓰는 방법을 정리했습니다.
         </Card.Description>
       </Card.Body>
-      <Card.Link href="/docs/colors">색상 문서 보기</Card.Link>
+      <Card.Footer>
+        <Card.Link href="/docs/colors">색상 문서 보기</Card.Link>
+      </Card.Footer>
     </Card>
   );
 }

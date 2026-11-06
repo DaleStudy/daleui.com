@@ -77,14 +77,18 @@ export function How() {
                 flex: 1,
               })}
             >
-              <Card.Icon name={card.icon} />
+              <Card.Header>
+                <Card.Icon name={card.icon} />
+              </Card.Header>
               <Card.Body>
                 <Card.Title>{card.title}</Card.Title>
                 <Card.Description>{card.description}</Card.Description>
               </Card.Body>
-              <Card.Link href={card.link} external>
-                {card.linkText}
-              </Card.Link>
+              <Card.Footer>
+                <Card.Link href={card.link} external>
+                  {card.linkText}
+                </Card.Link>
+              </Card.Footer>
             </Card>
           ))}
         </div>

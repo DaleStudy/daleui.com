@@ -41,8 +41,8 @@ function TeamCard({ member, isDark }: TeamCardProps) {
     <Card
       className={css({
         padding: "16",
+        gap: "24",
         borderRadius: "sm",
-        overflow: "hidden",
       })}
     >
       <HStack gap="16" justify="left">
@@ -107,11 +107,12 @@ function TeamCard({ member, isDark }: TeamCardProps) {
             </div>
           )}
         </div>
-        <Card.Body
+        <VStack
+          gap="4"
+          align="left"
           className={css({
             flex: 1,
             minWidth: 0,
-            gap: "4",
           })}
         >
           <Heading
@@ -159,7 +160,7 @@ function TeamCard({ member, isDark }: TeamCardProps) {
               {role}
             </Text>
           </Flex>
-        </Card.Body>
+        </VStack>
       </HStack>
       <HStack justify="right" gap="20" className={css({ width: "100%" })}>
         {githubUrl && (
