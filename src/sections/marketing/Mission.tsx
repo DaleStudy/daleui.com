@@ -73,7 +73,9 @@ export function Mission() {
                 flex: 1,
               })}
             >
-              <Card.Icon name={card.icon} />
+              <Card.Header>
+                <Card.Icon name={card.icon} />
+              </Card.Header>
               <Card.Body>
                 <Card.Title>{card.title}</Card.Title>
                 <Card.Description>{card.description}</Card.Description>

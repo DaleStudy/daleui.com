@@ -80,14 +80,18 @@ export function Community() {
         >
           {communityCards.map((card) => (
             <Card key={card.title} tone="brand">
-              <Card.Icon name={card.icon} />
+              <Card.Header>
+                <Card.Icon name={card.icon} />
+              </Card.Header>
               <Card.Body>
                 <Card.Title>{card.title}</Card.Title>
                 <Card.Description>{card.description}</Card.Description>
               </Card.Body>
-              <Card.Link href={card.href} external>
-                {card.linkText}
-              </Card.Link>
+              <Card.Footer>
+                <Card.Link href={card.href} external>
+                  {card.linkText}
+                </Card.Link>
+              </Card.Footer>
             </Card>
           ))}
         </div>

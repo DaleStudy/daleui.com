@@ -43,7 +43,6 @@ const styles = sva({
   slots: ["card", "cardBody", "quote", "authorMeta", "name", "affiliation"],
   base: {
     card: {
-      padding: "24",
       borderRadius: "sm",
       width: { base: "280px", sm: "360px" },
       flexShrink: 0,
@@ -51,6 +50,7 @@ const styles = sva({
       marginRight: "24",
     },
     cardBody: {
+      px: "24",
       gap: "16",
       height: "100%",
     },
