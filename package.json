@@ -65,7 +65,7 @@
     "lefthook": "^2.1.17",
     "open-graph-scraper": "^6.12.0",
     "p-limit": "^7.3.3",
-    "playwright": "^1.61.1",
+    "playwright": "^1.64.0",
     "prettier": "^3.9.10",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-expressive-code": "^0.44.3",
