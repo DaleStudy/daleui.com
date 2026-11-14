@@ -26,4 +26,9 @@ const stage = css({
   borderColor: "border.neutral",
   borderRadius: "md",
   backgroundColor: "bg.neutral",
+  /** 본문 제목에 붙는 밑줄이 예제 안의 제목까지 따라오면 컴포넌트 본래 모습이 가려집니다. */
+  "& :is(h1, h2, h3, h4, h5, h6)": {
+    paddingBottom: "0",
+    borderBottom: "none",
+  },
 });
