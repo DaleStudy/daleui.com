@@ -2,15 +2,97 @@ Flex는 CSS Flexbox 레이아웃을 위한 컨테이너입니다. `direction`으
 
 ## 기본 사용법
 
-```tsx
-import { Flex, Text } from "daleui";
+<Example name="flex-basic" />
 
-export function Example() {
-  return (
-    <Flex direction="row" justify="between" align="center" gap="16">
-      <Text>왼쪽</Text>
-      <Text>오른쪽</Text>
-    </Flex>
-  );
-}
-```
+## 방향
+
+`direction`은 자식이 늘어서는 방향을 정합니다. 기본값은 가로인 `row`이고 `column`·`rowReverse`·`columnReverse`를 받습니다.
+
+방향을 정하면 두 축이 함께 정해집니다. 자식이 늘어서는 쪽이 주축, 그에 직각인 쪽이 교차축입니다. `row`에서는 가로가 주축이라 `justify`가 좌우, `align`이 위아래를 다루고, `column`에서는 둘의 역할이 서로 바뀝니다. 방향을 바꿔도 정렬 prop 이름은 그대로이므로, `direction`을 먼저 정하고 정렬을 읽어야 합니다.
+
+`rowReverse`·`columnReverse`는 DOM 순서는 그대로 두고 그리는 순서만 뒤집습니다. 화면에서 보이는 순서와 탭 순서·스크린 리더가 읽는 순서가 어긋나므로, 순서를 바꾸고 싶다면 배열을 뒤집어 넘기는 편이 안전합니다.
+
+주축의 시작점도 함께 뒤집힙니다. `rowReverse`에서 `justify="start"`는 자식을 화면 오른쪽에 붙이고 `end`가 왼쪽이 되므로, 방향을 바꿀 때는 정렬 값도 같이 읽어야 합니다.
+
+## 정렬
+
+`justify`는 주축, `align`은 교차축 정렬입니다.
+
+| Prop      | 값                                        | 기본값    | 하는 일                                        |
+| --------- | ----------------------------------------- | --------- | ---------------------------------------------- |
+| `justify` | `start` `center` `end` `between` `around` | `start`   | 주축에서 자식을 몰거나 남는 공간을 나눠 줍니다 |
+| `align`   | `stretch` `start` `center` `end`          | `stretch` | 교차축에서 자식의 위치나 크기를 맞춥니다       |
+
+`align`의 기본값 `stretch`가 Flex와 [HStack](/docs/hstack)·[VStack](/docs/vstack)의 가장 큰 차이입니다. Stack은 교차축 가운데 정렬(`center`)로 시작하지만 Flex는 자식을 교차축 가득 늘립니다. 내용 길이가 다른 카드를 나란히 놓아도 높이가 같아지는 것이 이 기본값 덕분입니다.
+
+<Example name="flex-align" />
+
+`between`과 `around`는 남는 공간을 나눠 주는 값입니다. `between`은 공간을 자식 사이에만 나눠 첫 자식과 마지막 자식을 양 끝에 붙이고, `around`는 양 끝에도 절반 크기의 간격을 둡니다. 툴바처럼 끝까지 벌려야 한다면 `between`입니다. 자식이 하나뿐이면 `between`은 `start`, `around`는 `center`와 같아집니다.
+
+## 간격과 여백
+
+`gap`은 자식 사이 간격, `padding`은 컨테이너 안쪽 여백이고 둘 다 [스페이싱 토큰](/docs/spacing) 이름을 받습니다. `gap`은 자식 사이에만 들어가고 바깥 테두리에는 영향을 주지 않으므로, 둘을 함께 써서 안쪽 여백과 자식 간격을 따로 조절합니다.
+
+자식마다 `margin`을 주는 대신 `gap`을 씁니다. 자식이 몇 개로 늘어나든 간격이 한 번만 정의되고, 첫 자식과 마지막 자식만 예외 처리할 일도 없습니다.
+
+Flex는 줄바꿈(`flex-wrap`)을 지원하지 않습니다. 자식이 많거나 화면이 좁으면 다음 줄로 넘어가는 대신 자식이 줄어들거나 컨테이너를 넘칩니다. 넘칠 만한 묶음이라면 [Grid](/docs/grid)로 열을 선언하거나 `className`으로 줄바꿈을 직접 지정합니다.
+
+`margin`·`width`·`height`도 받지 않습니다. 바깥 여백이나 크기가 필요하면 [Box](/docs/box)로 감싸거나 `className`으로 지정합니다.
+
+## 시맨틱 태그와 역할
+
+`as`는 Flex가 만들어 낼 HTML 태그를 고릅니다. 기본값은 `div`이고 `section`·`article`·`main`·`aside`·`header`·`footer`·`nav`·`span`을 받습니다. 가로로 늘어선 링크 묶음이 곧 사이트 내비게이션이라면 `as="nav"`처럼 배치와 의미를 한 요소에서 함께 처리할 수 있습니다.
+
+<Example name="flex-nav" />
+
+`role`은 태그만으로 전달되지 않는 의미가 있을 때만 씁니다. 예를 들어 카드 묶음을 목록으로 읽히게 하려면 컨테이너의 `role="list"`와 자식의 `role="listitem"`을 짝으로 지정해야 하며, 한쪽만 주면 목록으로 읽히지 않습니다. `as`로 고른 시맨틱 태그에 같은 뜻의 `role`을 덧붙이는 것은 중복이므로 하지 않습니다.
+
+## Props
+
+| Prop        | 타입                                                                                      | 기본값      | 설명                                |
+| ----------- | ----------------------------------------------------------------------------------------- | ----------- | ----------------------------------- |
+| `as`        | `"div"` `"section"` `"article"` `"main"` `"aside"` `"header"` `"footer"` `"nav"` `"span"` | `"div"`     | 렌더링할 HTML 태그                  |
+| `direction` | `"row"` `"column"` `"rowReverse"` `"columnReverse"`                                       | `"row"`     | 자식이 늘어서는 방향                |
+| `justify`   | `"start"` `"center"` `"end"` `"between"` `"around"`                                       | `"start"`   | 주축 정렬                           |
+| `align`     | `"stretch"` `"start"` `"center"` `"end"`                                                  | `"stretch"` | 교차축 정렬                         |
+| `gap`       | 스페이싱 토큰 이름 (`"0"`–`"48"`)                                                         | 없음        | 자식 사이 간격                      |
+| `padding`   | 스페이싱 토큰 이름 (`"0"`–`"48"`)                                                         | 없음        | 네 면의 안쪽 여백                   |
+| `role`      | `AriaRole`                                                                                | 없음        | 태그로 전달되지 않는 의미가 있을 때 |
+| `ref`       | `Ref<HTMLElement>`                                                                        | 없음        | 렌더링된 요소 참조                  |
+
+`className`과 `id`·`onClick`·`aria-*` 같은 나머지 HTML 속성은 렌더링된 요소로 그대로 전달됩니다. `className`은 Flex가 만든 클래스 뒤에 붙으므로, 줄바꿈이나 크기처럼 Flex가 다루지 않는 스타일은 `className`으로 지정합니다.
+
+## 사용 가이드
+
+Flex는 **한 방향으로 늘어놓되 기본값만으로는 부족할 때** 씁니다. 교차축을 가운데가 아닌 곳에 맞추거나, 한 컨테이너에서 방향을 바꾸거나, 자식 높이를 서로 맞춰야 하는 경우입니다.
+
+| 하려는 일                            | 쓰는 컴포넌트          |
+| ------------------------------------ | ---------------------- |
+| 아이콘과 텍스트를 가로로 나란히 놓기 | [HStack](/docs/hstack) |
+| 제목과 본문을 세로로 쌓기            | [VStack](/docs/vstack) |
+| 교차축 정렬·방향 전환을 직접 정하기  | Flex                   |
+| 행과 열을 함께 정하기                | [Grid](/docs/grid)     |
+| 배치 없이 한 덩어리에 여백·폭을 주기 | [Box](/docs/box)       |
+
+흔한 오용은 세 가지입니다.
+
+- **Stack의 기본값을 Flex로 다시 쓰기** — `direction="row"`에 `align="center"`를 더해 가로 한 줄 가운데 정렬을 만들고 있다면, [HStack](/docs/hstack)이 같은 결과를 prop 없이 냅니다. `column`에 `align="center"`도 [VStack](/docs/vstack)과 같습니다.
+- **줄바꿈을 기대하기** — Flex에는 `wrap`이 없습니다. 자식 수가 유동적이고 접히기를 바란다면 [Grid](/docs/grid)를 씁니다.
+- **reverse로 순서 바꾸기** — 보이는 순서만 바뀌고 읽는 순서는 그대로입니다. 데이터 순서를 바꾸는 쪽이 맞습니다.
+
+## 접근성
+
+키보드·포커스·명암비처럼 공통으로 지켜야 할 것은 [접근성 가이드](/docs/a11y-guide)에 있습니다. Flex에서만 신경 쓸 점은 다음과 같습니다.
+
+- `rowReverse`·`columnReverse`는 시각 순서와 DOM 순서를 어긋나게 합니다. 탭은 DOM 순서대로 이동하므로 포커스가 화면을 거꾸로 건너뛰게 되고, 스크린 리더도 화면과 다른 순서로 읽습니다.
+- `gap`으로 만든 시각적 묶음은 보조 기술에 전달되지 않습니다. 묶음 자체에 의미가 있다면 `as`로 시맨틱 태그를 고르거나 제목·`aria-label`로 이름을 붙입니다.
+- `as="nav"`처럼 랜드마크가 되는 태그를 한 페이지에 여러 개 둔다면 각각 `aria-label`로 구분합니다.
+- `role="list"`를 줬다면 자식에도 `role="listitem"`을 함께 줍니다. 컨테이너에만 역할을 주면 항목 수가 읽히지 않습니다.
+
+## 관련 문서
+
+- [HStack](/docs/hstack) · [VStack](/docs/vstack) — Flex의 가로·세로 패턴을 기본값으로 묶은 컴포넌트
+- [Grid](/docs/grid) — 행과 열을 함께 정해야 하거나 줄바꿈이 필요할 때
+- [Box](/docs/box) — 배치 없이 여백·폭만 줄 때
+- [스페이싱](/docs/spacing) — `gap`·`padding`에 넣는 여백 스케일
+- [접근성](/docs/a11y-guide) — 순서와 랜드마크에서 지켜야 할 것
